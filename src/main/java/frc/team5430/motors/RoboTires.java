@@ -21,7 +21,7 @@ private double encoderTicks = 2048;
         super(CANid);
     }
 
-    //individually control motors for distance.
+    /**individually control motors for distance. */
 public void driveInDistance(double feet){
 
 totalInches = feet * inches;

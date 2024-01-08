@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -9,13 +10,19 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.team5430.motors.RoboTires;
-
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class driveTrain extends SubsystemBase {
+
+    private enum state{
+        RESTING,
+        ROTATING,
+        SETTING;    
+    }
+    //sets current state as RESTING when robot starts up 
+    state current = state.RESTING;
     
+
     final static RoboTires backLeftMotor = new RoboTires(Constants.CANid.backLeftMotor);
     final static RoboTires frontLeftMotor = new RoboTires(Constants.CANid.frontLeftMotor);
     final static RoboTires backRightMotor = new RoboTires(Constants.CANid.backRightMotor);
@@ -45,13 +52,13 @@ public class driveTrain extends SubsystemBase {
     }
 
     public void drive(double left, double right){
+        current = state.ROTATING;
         backLeftMotor.set(ControlMode.PercentOutput, left/2 * Constants.multiplier);
         frontLeftMotor.set(ControlMode.PercentOutput, left/2 * Constants.multiplier);
         backRightMotor.set(ControlMode.PercentOutput, right/2 * Constants.multiplier);
         frontRightMotor.set(ControlMode.PercentOutput, right/2 * Constants.multiplier);
-
     }
-
+//toggle between coast and break mode.
     public void CoastingBreakToggle(){
         if(D_toggle){
             backLeftMotor.setNeutralMode(NeutralMode.Coast);
@@ -67,7 +74,7 @@ public class driveTrain extends SubsystemBase {
             D_toggle = true;
         }
     }
-    
+
 //Commands are started with "C_" as to identify them as commands rather than methods
     public Command C_drive(double left, double right){
         return new InstantCommand(
@@ -76,6 +83,7 @@ public class driveTrain extends SubsystemBase {
     }
         //  
     public void driveInDistance(double feet){
+        current = state.SETTING;
         backLeftMotor.driveInDistance(feet);
         frontLeftMotor.driveInDistance(feet);
         backRightMotor.driveInDistance(feet);
@@ -88,8 +96,12 @@ public class driveTrain extends SubsystemBase {
         );
     }
 
-@Override
-public void periodic(){
+/**Returns current State as a String */
+    public String getState(){
+        return current.toString();
+    }
 
-}
+    @Override
+    public void periodic(){
+    }
 }
