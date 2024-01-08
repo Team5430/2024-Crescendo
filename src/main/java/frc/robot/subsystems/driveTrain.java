@@ -1,8 +1,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,58 +20,11 @@ public class driveTrain extends SubsystemBase {
     final static RoboTires frontLeftMotor = new RoboTires(Constants.CANid.frontLeftMotor);
     final static RoboTires backRightMotor = new RoboTires(Constants.CANid.backRightMotor);
     final static RoboTires frontRightMotor = new RoboTires(Constants.CANid.frontRightMotor);
-    //grouping
-    final static MotorControllerGroup Lgroup = new MotorControllerGroup(backLeftMotor, frontLeftMotor);
-    final static MotorControllerGroup Rgroup = new MotorControllerGroup(backRightMotor, frontRightMotor);
+
+    public boolean D_toggle = true;
+
     static SupplyCurrentLimitConfiguration configTalonCurrent = new SupplyCurrentLimitConfiguration(true,55,0,0);
 
- 
- //when a button is pressed the solenoid goes up and when you press another button it goes down.
-   public static DoubleSolenoid driveshifter = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1); //change to right pneumatic module
- //When we press a button the flag goes up and when the second button is pressed it retacts.
-     public static DoubleSolenoid Pushypush = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 2, 3);//change to right pneumatic module
- 
-   //When a button is held down it will drive faster
-     public static Command driveToggle() {      
-         return new InstantCommand(
-             () -> driveshifter.toggle()
-     );
- }
- 
-     //It sets the drive value forward
-     public static void pneumaticENABLE(){
-         driveshifter.set(Value.kReverse);
-         Pushypush.set(Value.kReverse);
-     }
-     
-     public static Command RighTriggerOn() {
-         return new InstantCommand(
-         () ->  Pushypush.set(Value.kForward)
-         );
-     }
- 
-     public static Command LefTriggerOff() {
-         return new InstantCommand(
-         () ->  Pushypush.set(Value.kReverse)
-         );
-     } 
- 
-     //Makes the left and right groups of motors move half speed
-   //  public void drive(double left, double right){
-     
-     //    frontrightmotor.set(ControlMode.PercentOutput, right/2); 
-      //   backrightmotor.set(ControlMode.PercentOutput, right/2);
-      //   frontleftmotor.set(ControlMode.PercentOutput, -left/2);  
-      //   backleftmotor.set(ControlMode.PercentOutput, -left/2);
-   //  }
- 
-     //Akira will take a left and right value, and run the drive function using those values.
-     //The left motors will move in the negative direction
-     public Command Akira (double left, double right){
-         return new InstantCommand(
-             () -> drive(-left, right)
-         );
-     }
  
     public void motorSettings(){
         backLeftMotor.setInverted(true);
@@ -83,16 +37,37 @@ public class driveTrain extends SubsystemBase {
     }
 
     public void VariableSpeedIncrease(){
-        Constants.multiplier += .1;
+        Constants.multiplier = .9;  
     }
 
     public void VariableSpeedDecrease(){
-        Constants.multiplier -= .1;
+        Constants.multiplier = .5;
     }
+
     public void drive(double left, double right){
-        Lgroup.set(left);
-        Rgroup.set(right);        
+        backLeftMotor.set(ControlMode.PercentOutput, left/2 * Constants.multiplier);
+        frontLeftMotor.set(ControlMode.PercentOutput, left/2 * Constants.multiplier);
+        backRightMotor.set(ControlMode.PercentOutput, right/2 * Constants.multiplier);
+        frontRightMotor.set(ControlMode.PercentOutput, right/2 * Constants.multiplier);
+
     }
+
+    public void CoastingBreakToggle(){
+        if(D_toggle){
+            backLeftMotor.setNeutralMode(NeutralMode.Coast);
+            frontLeftMotor.setNeutralMode(NeutralMode.Coast);
+            backRightMotor.setNeutralMode(NeutralMode.Coast);
+            frontRightMotor.setNeutralMode(NeutralMode.Coast);
+            D_toggle = false;
+        } else{
+            backLeftMotor.setNeutralMode(NeutralMode.Brake);
+            frontLeftMotor.setNeutralMode(NeutralMode.Brake);
+            backRightMotor.setNeutralMode(NeutralMode.Brake);
+            frontRightMotor.setNeutralMode(NeutralMode.Brake);
+            D_toggle = true;
+        }
+    }
+    
 //Commands are started with "C_" as to identify them as commands rather than methods
     public Command C_drive(double left, double right){
         return new InstantCommand(
