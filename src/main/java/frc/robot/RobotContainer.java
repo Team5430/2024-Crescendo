@@ -25,7 +25,7 @@ public class RobotContainer {
   private intakeSub m_IntakeSub = new intakeSub();
 
   private CommandJoystick L_Joy = new CommandJoystick(Constants.OperatorC.L_Joy);
-  private CommandJoystick R_Joy = new CommandJoystick(Constants.OperatorC.R_Joy_Joy);
+  private CommandJoystick R_Joy = new CommandJoystick(Constants.OperatorC.R_Joy);
 
   private CommandJoystick CO_Con = new CommandJoystick(Constants.OperatorC.CO_Con);
   //chooser for auton
