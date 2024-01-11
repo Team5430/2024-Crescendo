@@ -1,58 +1,65 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
+import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class intakeSub extends SubsystemBase{
-    
-    private enum state{
-        RESTING,
-        ROTATING,
-        INTAKING
-    }
+public class intakeSub extends SubsystemBase {
 
-    WPI_TalonFX rotateMotor = new WPI_TalonFX(Constants.CANid.rotateMotor);
-    WPI_TalonFX pullMotor = new WPI_TalonFX(Constants.CANid.pullMotor);
+  private enum state {
+    RESTING,
+    ROTATING,
+    INTAKING
+  }
 
-    state current = state.RESTING;
+  static TalonFX rotateMotor = new TalonFX(Constants.CANid.rotateMotor);
+  static TalonFX pullMotor = new TalonFX(Constants.CANid.pullMotor);
 
-    static double initial = rotateMotor.getSelectedSensorPosition();
+  static double initial = rotateMotor.getRotorPosition().getValueAsDouble();
 
-    public intakeSub(){}
-    
-    //spins outwards wheels into the robot
-    public void intake(){
-        current = state.INTAKING;
-        pullMotor.set(ControlMode.PercentOutput, .5);
-    }
+  state current = state.RESTING;
 
-    public void stopIntake(){
-        //stop motors on outer intake
-        pullMotor.set(ControlMode.PercentOutput, 0);
-        current = state.RESTING;
-    }
+  final DutyCycleOut m_stop = new DutyCycleOut(0);
 
-    public void resetPos(){
-        
-        current = state.ROTATING;
-        stopIntake();
-        rotateMotor.set(ControlMode.position, initial);
-        initial = rotateMotor.getSelectedSensorPosition; //update new reset position as inital   
-        current = state.RESTING;
+  final DutyCycleOut m_intake = new DutyCycleOut(.5);
 
-    }
+  final PositionDutyCycle m_inital = new PositionDutyCycle(initial);
 
-    public void extendnIntake(){
-        current = state.ROTATING;
-        //motor spin out using encoders
-        current = state.INTAKING;
-        intake();
+  public intakeSub() {}
 
-    }
+  // spins outwards wheels into the robot
+  public void intake() {
+    current = state.INTAKING;
+    pullMotor.setControl(m_intake);
+  }
 
-/**Returns current State as a String */
-    public String getState(){
-        return current.toString();
-    }
+  public void stopIntake() {
+    // stop motors on outer intake
+    pullMotor.setControl(m_stop);
+    current = state.RESTING;
+  }
 
+  public void resetPos() {
+
+    current = state.ROTATING;
+    stopIntake();
+    rotateMotor.setControl(m_inital);
+    initial =
+        rotateMotor.getRotorPosition().getValueAsDouble(); // update new reset position as initial
+    current = state.RESTING;
+  }
+
+  public void extendnIntake() {
+    current = state.ROTATING;
+    // motor spin out using encoders
+    current = state.INTAKING;
+    intake();
+  }
+
+  /** Returns current State as a String */
+  public String getState() {
+    return current.toString();
+  }
 }

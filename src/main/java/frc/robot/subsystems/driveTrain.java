@@ -1,107 +1,96 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.team5430.motors.RoboTires;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class driveTrain extends SubsystemBase {
 
-    private enum state{
-        RESTING,
-        ROTATING,
-        SETTING;    
-    }
-    //sets current state as RESTING when robot starts up 
-    state current = state.RESTING;
-    
+  private enum state {
+    RESTING,
+    ROTATING,
+    SETTING;
+  }
 
-    final static RoboTires backLeftMotor = new RoboTires(Constants.CANid.backLeftMotor);
-    final static RoboTires frontLeftMotor = new RoboTires(Constants.CANid.frontLeftMotor);
-    final static RoboTires backRightMotor = new RoboTires(Constants.CANid.backRightMotor);
-    final static RoboTires frontRightMotor = new RoboTires(Constants.CANid.frontRightMotor);
+  // sets current state as RESTING when robot starts up
+  state current = state.RESTING;
 
-    public boolean D_toggle = true;
+  static final RoboTires backLeftMotor = new RoboTires(Constants.CANid.backLeftMotor);
+  static final RoboTires frontLeftMotor = new RoboTires(Constants.CANid.frontLeftMotor);
+  static final RoboTires backRightMotor = new RoboTires(Constants.CANid.backRightMotor);
+  static final RoboTires frontRightMotor = new RoboTires(Constants.CANid.frontRightMotor);
 
-    static SupplyCurrentLimitConfiguration configTalonCurrent = new SupplyCurrentLimitConfiguration(true,55,0,0);
+  public boolean D_toggle = true;
 
- 
-    public void motorSettings(){
-        backLeftMotor.setInverted(true);
-        frontLeftMotor.setInverted(true);
-        //CONFIG
-        backLeftMotor.configSupplyCurrentLimit(configTalonCurrent);
-        frontLeftMotor.configSupplyCurrentLimit(configTalonCurrent);
-        backRightMotor.configSupplyCurrentLimit(configTalonCurrent);
-        frontRightMotor.configSupplyCurrentLimit(configTalonCurrent);
-    }
+  public void motorSettings() {
+    backLeftMotor.setInverted(true);
+    frontLeftMotor.setInverted(true);
+  }
 
-    public void VariableSpeedIncrease(){
-        Constants.multiplier = .9;  
-    }
+  public void VariableSpeedIncrease() {
+    Constants.multiplier = .9;
+  }
 
-    public void VariableSpeedDecrease(){
-        Constants.multiplier = .5;
-    }
+  public void VariableSpeedDecrease() {
+    Constants.multiplier = .5;
+  }
 
-    public void drive(double left, double right){
-        current = state.ROTATING;
-        backLeftMotor.set(ControlMode.PercentOutput, left/2 * Constants.multiplier);
-        frontLeftMotor.set(ControlMode.PercentOutput, left/2 * Constants.multiplier);
-        backRightMotor.set(ControlMode.PercentOutput, right/2 * Constants.multiplier);
-        frontRightMotor.set(ControlMode.PercentOutput, right/2 * Constants.multiplier);
-    }
-//toggle between coast and break mode.
-    public void CoastingBreakToggle(){
-        if(D_toggle){
-            backLeftMotor.setNeutralMode(NeutralMode.Coast);
-            frontLeftMotor.setNeutralMode(NeutralMode.Coast);
-            backRightMotor.setNeutralMode(NeutralMode.Coast);
-            frontRightMotor.setNeutralMode(NeutralMode.Coast);
-            D_toggle = false;
-        } else{
-            backLeftMotor.setNeutralMode(NeutralMode.Brake);
-            frontLeftMotor.setNeutralMode(NeutralMode.Brake);
-            backRightMotor.setNeutralMode(NeutralMode.Brake);
-            frontRightMotor.setNeutralMode(NeutralMode.Brake);
-            D_toggle = true;
-        }
-    }
+  public void drive(double left, double right) {
 
-//Commands are started with "C_" as to identify them as commands rather than methods
-    public Command C_drive(double left, double right){
-        return new InstantCommand(
-            () -> drive(left, right)
-        );
-    }
-        //  
-    public void driveInDistance(double feet){
-        current = state.SETTING;
-        backLeftMotor.driveInDistance(feet);
-        frontLeftMotor.driveInDistance(feet);
-        backRightMotor.driveInDistance(feet);
-        frontRightMotor.driveInDistance(feet);
-    }
+    // record inputs
+    DutyCycleOut m_left = new DutyCycleOut(left / 2 * Constants.multiplier);
+    DutyCycleOut m_right = new DutyCycleOut(right / 2 * Constants.multiplier);
 
-    public Command C_driveInDistance(double feet){
-        return new InstantCommand(
-        () -> driveInDistance(feet)
-        );
-    }
+    backLeftMotor.setControl(m_left);
+    frontLeftMotor.setControl(m_left);
+    backRightMotor.setControl(m_right);
+    frontRightMotor.setControl(m_right);
+  }
 
-/**Returns current State as a String */
-    public String getState(){
-        return current.toString();
+  // toggle between coast and break mode.
+  public void CoastingBreakToggle() {
+    if (D_toggle) {
+      backLeftMotor.setNeutralMode(NeutralModeValue.Coast);
+      frontLeftMotor.setNeutralMode(NeutralModeValue.Coast);
+      backRightMotor.setNeutralMode(NeutralModeValue.Coast);
+      frontRightMotor.setNeutralMode(NeutralModeValue.Coast);
+      D_toggle = false;
+    } else {
+      backLeftMotor.setNeutralMode(NeutralModeValue.Brake);
+      frontLeftMotor.setNeutralMode(NeutralModeValue.Brake);
+      backRightMotor.setNeutralMode(NeutralModeValue.Brake);
+      frontRightMotor.setNeutralMode(NeutralModeValue.Brake);
+      D_toggle = true;
     }
+  }
 
-    @Override
-    public void periodic(){
-    }
+  // Commands are started with "C_" as to identify them as commands rather than methods
+  public Command C_drive(double left, double right) {
+    return new InstantCommand(() -> drive(left, right));
+  }
+
+  //
+  public void driveInDistance(double feet) {
+    current = state.SETTING;
+    backLeftMotor.driveInDistance(feet);
+    frontLeftMotor.driveInDistance(feet);
+    backRightMotor.driveInDistance(feet);
+    frontRightMotor.driveInDistance(feet);
+  }
+
+  public Command C_driveInDistance(double feet) {
+    return new InstantCommand(() -> driveInDistance(feet));
+  }
+
+  /** Returns current State as a String */
+  public String getState() {
+    return current.toString();
+  }
+
+  @Override
+  public void periodic() {}
 }
