@@ -8,7 +8,7 @@ import frc.robot.Constants;
 public class shooterSub extends SubsystemBase {
 
   private enum state {
-    RESTING,
+    RESTING, 
     OUTTAKING,
     INTAKING
   }
@@ -22,23 +22,23 @@ public class shooterSub extends SubsystemBase {
   static TalonSRX L_motor = new TalonSRX(Constants.CANid.L_shooterMotor);
   static TalonSRX R_motor = new TalonSRX(Constants.CANid.R_shooterMotor);
 
-  public static void Intake() {
+  public  void ShooterIntake() {
     current = state.INTAKING;
     L_motor.set(ControlMode.PercentOutput, .6);
     R_motor.set(ControlMode.PercentOutput, -.6);
   }
 
-  public static void Stop() {
+  public  void ShooterStop() {
     current = state.RESTING;
     L_motor.set(ControlMode.PercentOutput, 0);
     R_motor.set(ControlMode.PercentOutput, 0);
   }
 
   // aka shooting
-  public static void Outake() {
+  public  void ShooterOutake() {
     current = state.OUTTAKING;
     L_motor.set(ControlMode.PercentOutput, 0.5);
-    R_motor.set(ControlMode.PercentOutput, 0.5);
+    R_motor.set(ControlMode.PercentOutput, -0.5);
   }
 
   /** Returns current State as a String */
