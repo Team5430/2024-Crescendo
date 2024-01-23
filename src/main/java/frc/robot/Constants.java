@@ -3,6 +3,7 @@ package frc.robot;
 public class Constants {
 
   public static double multiplier = 0;
+  public static double gyroPos = 0;
 
   public static class CANid {
     // Talons CANid

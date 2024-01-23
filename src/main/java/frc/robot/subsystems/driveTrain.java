@@ -2,6 +2,9 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,6 +26,8 @@ public class driveTrain extends SubsystemBase {
   static final RoboTires frontLeftMotor = new RoboTires(Constants.CANid.frontLeftMotor);
   static final RoboTires backRightMotor = new RoboTires(Constants.CANid.backRightMotor);
   static final RoboTires frontRightMotor = new RoboTires(Constants.CANid.frontRightMotor);
+
+  AHRS g_ahrs = new AHRS(SPI.Port.kMXP);
 
   public boolean D_toggle = true;
 
@@ -82,15 +87,65 @@ public class driveTrain extends SubsystemBase {
     frontRightMotor.driveInDistance(feet);
   }
 
+  public void StopMotors(){
+    backLeftMotor.stopMotor();
+    backRightMotor.stopMotor();
+    frontLeftMotor.stopMotor();
+    frontRightMotor.stopMotor();
+  }
+
+  public void RunMotors(double speed){
+    backLeftMotor.set(speed);
+    backRightMotor.set(speed);
+    frontLeftMotor.set(speed);
+    frontRightMotor.set(speed);
+    
+  }
+
+  /**positive speed value turns RIGHT; neagtive speed value turns LEFT */
+  public void TurnRobot(double speed){
+    backLeftMotor.set(speed);
+    backRightMotor.set(-speed);
+    frontLeftMotor.set(speed);
+    frontRightMotor.set(-speed);
+  }
+
+  
+
   public Command C_driveInDistance(double feet) {
     return new InstantCommand(() -> driveInDistance(feet));
   }
 
+  public void turntoAngle(double angle){
+
+    g_ahrs.reset();
+  
+    double initial = g_ahrs.getAngle();
+  
+    //if its negative, we want to turn left
+    if(angle == -Math.abs(angle)){
+      //while current angle is less than the current angle + wanted
+      while((initial + angle) >= g_ahrs.getAngle()){
+        TurnRobot(-.3);
+      UpdateVal();
+     }
+   StopMotors();
+   }else{
+      while((initial + angle) >= g_ahrs.getAngle()){
+        TurnRobot(-.3);
+      UpdateVal();
+     }
+   StopMotors();
+   }
+}
   /** Returns current State as a String */
   public String getState() {
     return current.toString();
   }
 
+  public void UpdateVal(){
+    Constants.gyroPos = g_ahrs.getAngle();
+  }
   @Override
   public void periodic() {}
 }
