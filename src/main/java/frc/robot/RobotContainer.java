@@ -55,9 +55,12 @@ public class RobotContainer {
 
     // trigger first, then the use of it
     Trigger R_joyButton = R_Joy.button(3);
+    Trigger triggershooter = CO_Con.button(2);
 
     R_joyButton.onTrue(new InstantCommand(m_driveTrain::VariableSpeedIncrease, m_driveTrain));
     R_joyButton.onFalse(new InstantCommand(m_driveTrain::VariableSpeedDecrease, m_driveTrain));
+    triggershooter.onTrue(new InstantCommand(m_ShooterSub::Outake, m_ShooterSub));
+    
   }
 
   public Command getAutonomousCommand() {

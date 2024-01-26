@@ -18,6 +18,8 @@ public class shooterSub extends SubsystemBase {
   // Intake and shooter are both the same thing
   public shooterSub() {}
 
+  static final double powerhigh = 0.8;
+
   // Shows the right and left motor
   static TalonSRX L_motor = new TalonSRX(Constants.CANid.L_shooterMotor);
   static TalonSRX R_motor = new TalonSRX(Constants.CANid.R_shooterMotor);
@@ -35,10 +37,10 @@ public class shooterSub extends SubsystemBase {
   }
 
   // aka shooting
-  public static void Outake() {
+  public void Outake() {
     current = state.OUTTAKING;
-    L_motor.set(ControlMode.PercentOutput, 0.5);
-    R_motor.set(ControlMode.PercentOutput, 0.5);
+    L_motor.set(ControlMode.PercentOutput, powerhigh);
+    R_motor.set(ControlMode.PercentOutput, powerhigh);
   }
 
   /** Returns current State as a String */
