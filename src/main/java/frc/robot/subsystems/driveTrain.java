@@ -20,20 +20,23 @@ public class driveTrain extends SubsystemBase {
   }
 
   // sets current state as RESTING when robot starts up
-  state current = state.RESTING;
+  static state current = state.RESTING;
 
   static final RoboTires backLeftMotor = new RoboTires(Constants.CANid.backLeftMotor);
   static final RoboTires frontLeftMotor = new RoboTires(Constants.CANid.frontLeftMotor);
   static final RoboTires backRightMotor = new RoboTires(Constants.CANid.backRightMotor);
   static final RoboTires frontRightMotor = new RoboTires(Constants.CANid.frontRightMotor);
 
-  AHRS g_ahrs = new AHRS(SPI.Port.kMXP);
+  private static AHRS g_ahrs = new AHRS(SPI.Port.kMXP);
 
   public boolean D_toggle = true;
+
+  
 
   public void motorSettings() {
     backLeftMotor.setInverted(true);
     frontLeftMotor.setInverted(true);
+    setDefaultCommand(C_drive(RobotContainer.L_Joy.getY(), R_Joy.getY()));
   }
 
   public void VariableSpeedIncrease() {
@@ -79,7 +82,7 @@ public class driveTrain extends SubsystemBase {
   }
 
   //
-  public void driveInDistance(double feet) {
+  public static void driveInDistance(double feet) {
     current = state.SETTING;
     backLeftMotor.driveInDistance(feet);
     frontLeftMotor.driveInDistance(feet);
@@ -87,7 +90,7 @@ public class driveTrain extends SubsystemBase {
     frontRightMotor.driveInDistance(feet);
   }
 
-  public void StopMotors(){
+  public static void StopMotors(){
     backLeftMotor.stopMotor();
     backRightMotor.stopMotor();
     frontLeftMotor.stopMotor();
@@ -103,7 +106,7 @@ public class driveTrain extends SubsystemBase {
   }
 
   /**positive speed value turns RIGHT; neagtive speed value turns LEFT */
-  public void TurnRobot(double speed){
+  public static void TurnRobot(double speed){
     backLeftMotor.set(speed);
     backRightMotor.set(-speed);
     frontLeftMotor.set(speed);
@@ -112,11 +115,13 @@ public class driveTrain extends SubsystemBase {
 
   
 
-  public Command C_driveInDistance(double feet) {
+  public static Command C_driveInDistance(double feet) {
     return new InstantCommand(() -> driveInDistance(feet));
   }
 
-  public void turntoAngle(double angle){
+  /**Negative turns CounterClockwise, while positive, Clockwise 
+ * @return */
+  public static Command[] turntoAngle(double angle){
 
     g_ahrs.reset();
   
@@ -137,15 +142,25 @@ public class driveTrain extends SubsystemBase {
      }
    StopMotors();
    }
+    return null;
+}
+
+/**Negative turns CounterClockwise, while positive, Clockwise COMMAND VERSION */
+public static Command C_turntoAngle(double angle){
+  return new InstantCommand(() -> turntoAngle(angle));
 }
   /** Returns current State as a String */
   public String getState() {
     return current.toString();
   }
 
-  public void UpdateVal(){
+  //used a fix for a present delay
+  public static void UpdateVal(){
     Constants.gyroPos = g_ahrs.getAngle();
   }
+  
   @Override
   public void periodic() {}
+
+  
 }

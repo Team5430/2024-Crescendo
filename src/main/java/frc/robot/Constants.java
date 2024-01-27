@@ -7,10 +7,10 @@ public class Constants {
 
   public static class CANid {
     // Talons CANid
-    public static int backLeftMotor;
-    public static int frontLeftMotor;
-    public static int backRightMotor;
-    public static int frontRightMotor;
+    public static int backLeftMotor = 2;
+    public static int frontLeftMotor = 4;
+    public static int backRightMotor = 3;
+    public static int frontRightMotor = 5;
     public static int L_shooterMotor;
     public static int R_shooterMotor;
     public static int rotateMotor;
