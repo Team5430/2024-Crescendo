@@ -34,7 +34,7 @@ public class RobotContainer {
     configureBindings();
     m_driveTrain.motorSettings();
 
-    //m_driveTrain.setDefaultCommand(m_driveTrain.C_drive(L_Joy.getY(), R_Joy.getY()));
+    m_driveTrain.setDefaultCommand(m_driveTrain.C_drive(L_Joy.getY(), R_Joy.getY()));
 
     // commands
     /* 

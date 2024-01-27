@@ -31,12 +31,9 @@ public class driveTrain extends SubsystemBase {
 
   public boolean D_toggle = true;
 
-  
-
   public void motorSettings() {
     backLeftMotor.setInverted(true);
     frontLeftMotor.setInverted(true);
-    setDefaultCommand(C_drive(RobotContainer.L_Joy.getY(), R_Joy.getY()));
   }
 
   public void VariableSpeedIncrease() {
