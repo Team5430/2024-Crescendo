@@ -14,11 +14,15 @@ import frc.robot.commands.autoLeft;
 import frc.robot.commands.autoRight;
 import frc.robot.commands.autoCenter;
 import frc.robot.subsystems.driveTrain;
+import frc.robot.subsystems.intakeSub;
+import frc.robot.subsystems.shooterSub;
 
 public class RobotContainer {
 
   // subsystems
   private driveTrain m_driveTrain = new driveTrain();
+  private shooterSub m_shooterSub = new shooterSub();
+  private intakeSub m_intakeSub = new intakeSub();
 
 
   public CommandJoystick L_Joy = new CommandJoystick(Constants.OperatorC.L_Joy);
@@ -32,15 +36,21 @@ public class RobotContainer {
     // default commands
 
     configureBindings();
-    m_driveTrain.motorSettings();
+
+    //motor configs
+    m_driveTrain.motorConfig();
+
+    m_intakeSub.motorConfig();
+
+    m_shooterSub.motorConfig();
 
     m_driveTrain.setDefaultCommand(m_driveTrain.C_drive(L_Joy.getY(), R_Joy.getY()));
 
     // commands
-    /* 
-    Command auto_1 = new autoCenter(m_driveTrain);
-    Command auto_2 = new autoLeft(m_driveTrain);
-    Command auto_3 = new autoRight(m_driveTrain);
+    
+    Command auto_1 = new autoCenter(m_driveTrain, m_shooterSub, m_intakeSub);
+    Command auto_2 = new autoLeft(m_driveTrain, m_shooterSub, m_intakeSub);
+    Command auto_3 = new autoRight(m_driveTrain, m_shooterSub, m_intakeSub);
 
     
     // shuffleboard options
@@ -49,7 +59,7 @@ public class RobotContainer {
     m_chooser.addOption("Auton 2", auto_2);
     m_chooser.addOption("Auton 3", auto_3);
 
-    */
+    
   }
 
   private void configureBindings() {

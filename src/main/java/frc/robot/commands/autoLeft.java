@@ -5,32 +5,33 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.driveTrain;
+import frc.robot.subsystems.intakeSub;
+import frc.robot.subsystems.shooterSub;
 
-import java.util.Optional;
 
 public class autoLeft extends Command {
 
   
-  public autoLeft(driveTrain drive) {
-    /* 
-    Optional<Alliance> ali = DriverStation.getAlliance();
-
-    if (ali.get() == Alliance.Red) {
-      /* Commands.sequence(
-       driveTrain.turntoAngle(-6); //Turn clockwise a little to left to line up and back up
-        driveTrain.C_driveInDistance(-4); //get out of the friendly zone
-        driveTrain.C_turntoAngle(12); //turn clockwise to the ampstation
-        driveTrain.C_driveInDistance(4); //get to amp station
-        
-    );
+  public autoLeft(driveTrain drive, shooterSub shoot, intakeSub intake) {
     
+    var ali = DriverStation.getAlliance();
 
+    if (ali.get().toString() == Alliance.Red.toString()) {
+       Commands.sequence(
+
+       drive.C_turntoAngle(-6), //Turn clockwise a little to left to line up and back up
+        drive.C_driveinFeet(-4), //get out of the friendly zone
+        drive.C_turntoAngle(12), //turn clockwise to the ampstation
+        drive.C_driveinFeet(4) //get to amp station 
+
+       );
+  
     } else {
 
       Commands.sequence(null);
     }
 
-    */
+    
   }
   
 }

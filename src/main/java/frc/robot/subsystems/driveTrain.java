@@ -31,7 +31,7 @@ public class driveTrain extends SubsystemBase {
 
   public boolean D_toggle = true;
 
-  public void motorSettings() {
+  public void motorConfig() {
     backLeftMotor.setInverted(true);
     frontLeftMotor.setInverted(true);
   }
@@ -110,10 +110,13 @@ public class driveTrain extends SubsystemBase {
     frontRightMotor.set(-speed);
   }
 
-  public Command C_driveInDistance(double feet) {
+  public Command C_driveinFeet(double feet) {
     return new InstantCommand(() -> driveInDistance(feet));
   }
 
+  public Command C_driveinInches(double inches) {
+    return new InstantCommand(() -> driveInDistance(inches/12));
+  }
 
 /** Turn to a desired angle, Negative going counter clockwise, and Positive clockwise */
   public static void turntoAngle(double angle){
@@ -140,7 +143,7 @@ public class driveTrain extends SubsystemBase {
 }
 
 /**Negative turns CounterClockwise, while positive, Clockwise COMMAND VERSION */
-public static Command C_turntoAngle(double angle){
+public Command C_turntoAngle(double angle){
   return new InstantCommand(() -> turntoAngle(angle));
 }
 
