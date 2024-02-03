@@ -53,7 +53,7 @@ public class driveTrain extends SubsystemBase {
     backLeftMotor.setControl(m_left);
     frontLeftMotor.setControl(m_left);
     backRightMotor.setControl(m_right);
-    frontRightMotor.setControl(m_right);
+    frontRightMotor.setControl(m_right);   
   }
 
   // toggle between coast and break mode.
@@ -110,12 +110,12 @@ public class driveTrain extends SubsystemBase {
     frontRightMotor.set(-speed);
   }
 
-  
-
   public Command C_driveInDistance(double feet) {
     return new InstantCommand(() -> driveInDistance(feet));
   }
 
+
+/** Turn to a desired angle, Negative going counter clockwise, and Positive clockwise */
   public void turntoAngle(double angle){
 
     g_ahrs.reset();
@@ -125,19 +125,20 @@ public class driveTrain extends SubsystemBase {
     //if its negative, we want to turn left
     if(angle == -Math.abs(angle)){
       //while current angle is less than the current angle + wanted
-      while((initial + angle) >= g_ahrs.getAngle()){
+      while((initial + angle) <= g_ahrs.getAngle()){
         TurnRobot(-.3);
       UpdateVal();
      }
    StopMotors();
    }else{
       while((initial + angle) >= g_ahrs.getAngle()){
-        TurnRobot(-.3);
+        TurnRobot(+.3);
       UpdateVal();
      }
    StopMotors();
    }
 }
+
   /** Returns current State as a String */
   public String getState() {
     return current.toString();
@@ -146,6 +147,7 @@ public class driveTrain extends SubsystemBase {
   public void UpdateVal(){
     Constants.gyroPos = g_ahrs.getAngle();
   }
+
   @Override
   public void periodic() {}
 }
