@@ -57,6 +57,7 @@ public class intakeSub extends SubsystemBase {
   public intakeSub() {}
 
   public void motorConfig(){
+    
     var slot0configs = new Slot0Configs();
 
     slot0configs.kP = .15;
