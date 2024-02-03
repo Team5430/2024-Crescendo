@@ -21,7 +21,9 @@ public class auto extends Command {
 
     } else {
       // runs if on blue, or just not connected to FMS
-      Commands.sequence(null);
+      Commands.sequence(
+      
+      );
     }
   }
 }

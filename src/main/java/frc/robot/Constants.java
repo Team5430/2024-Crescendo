@@ -15,6 +15,7 @@ public class Constants {
     public static int R_shooterMotor;
     public static int pivotMotor;
     public static int pullMotor;
+    public static int hang_motor;
   }
 
   public static class OperatorC {
