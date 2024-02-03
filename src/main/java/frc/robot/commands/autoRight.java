@@ -17,6 +17,7 @@ public class autoRight extends Command {
     Optional<Alliance> ali = DriverStation.getAlliance();
 
     if (ali.get() == Alliance.Red) {
+<<<<<<< HEAD:src/main/java/frc/robot/commands/autoRight.java
      // Commands.sequence();
 
     } else {
@@ -25,6 +26,13 @@ public class autoRight extends Command {
         driveTrain.
       );
       
+=======
+      Commands.sequence(drive.C_driveInDistance(4),drive.C_driveInDistance(5));
+
+    } else {
+
+      Commands.sequence(drive.C_driveInDistance(4),drive.C_driveInDistance(5));
+>>>>>>> dev:src/main/java/frc/robot/commands/auto3.java
     }
   }
   */

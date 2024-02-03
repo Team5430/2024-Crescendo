@@ -13,7 +13,7 @@ public class Constants {
     public static int frontRightMotor = 5;
     public static int L_shooterMotor;
     public static int R_shooterMotor;
-    public static int rotateMotor;
+    public static int pivotMotor;
     public static int pullMotor;
     public static int hang_motor;
   }

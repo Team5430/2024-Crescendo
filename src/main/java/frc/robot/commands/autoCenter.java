@@ -12,6 +12,7 @@ public class autoCenter extends Command {
 
   /* 
   // example auto; will not do anythhing; runs everything in sequence from right to left
+<<<<<<< HEAD:src/main/java/frc/robot/commands/autoCenter.java
   public autoCenter(driveTrain drive) {
     Optional<Alliance> ali = DriverStation.getAlliance();
     // checks what side you are on
@@ -24,6 +25,12 @@ public class autoCenter extends Command {
       Commands.sequence();
 
     }
+=======
+  public auto(driveTrain drive, shooterSub shoot, intakeSub intake) {
+
+    Commands.sequence(drive.C_driveInDistance(4),drive.C_driveInDistance(5));
+
+>>>>>>> dev:src/main/java/frc/robot/commands/auto.java
   }
   */
 }
