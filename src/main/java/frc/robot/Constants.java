@@ -4,6 +4,12 @@ public class Constants {
 
   public static double multiplier = 0;
   public static double gyroPos = 0;
+  public static double ratio = 10.71;
+  public static double encoderTicks = 2048;
+  public static double circumferenceInInches = 6 * Math.PI;
+  public static double inches = 12;
+
+  
 
   public static class CANid {
     // Talons CANid

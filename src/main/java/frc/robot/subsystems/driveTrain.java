@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.kauailabs.navx.frc.AHRS;
 
@@ -9,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.team5430.motors.RoboTires;
 
 public class driveTrain extends SubsystemBase {
 
@@ -22,10 +22,10 @@ public class driveTrain extends SubsystemBase {
   // sets current state as RESTING when robot starts up
   static state current = state.RESTING;
 
-  static final RoboTires backLeftMotor = new RoboTires(Constants.CANid.backLeftMotor);
-  static final RoboTires frontLeftMotor = new RoboTires(Constants.CANid.frontLeftMotor);
-  static final RoboTires backRightMotor = new RoboTires(Constants.CANid.backRightMotor);
-  static final RoboTires frontRightMotor = new RoboTires(Constants.CANid.frontRightMotor);
+  static final TalonFX backLeftMotor = new TalonFX(Constants.CANid.backLeftMotor);
+  static final TalonFX frontLeftMotor = new TalonFX(Constants.CANid.frontLeftMotor);
+  static final TalonFX backRightMotor = new TalonFX(Constants.CANid.backRightMotor);
+  static final TalonFX frontRightMotor = new TalonFX(Constants.CANid.frontRightMotor);
 
   private static AHRS g_ahrs = new AHRS(SPI.Port.kMXP);
 
@@ -42,6 +42,38 @@ public class driveTrain extends SubsystemBase {
 
   public void VariableSpeedDecrease() {
     Constants.multiplier = .5;
+  }
+
+  public void driveInDistance(double feet){
+
+    final DutyCycleOut m_request = new DutyCycleOut(.5);
+
+    final DutyCycleOut m_stop = new DutyCycleOut(0);
+
+    double totalInches = feet * Constants.inches;
+
+    double motorRotations = (totalInches / Constants.circumferenceInInches) * Constants.ratio;
+
+    double ticknum = motorRotations * Constants.encoderTicks;
+
+    var initial = backLeftMotor.getRotorPosition();
+
+    var posSignal = backLeftMotor.getRotorPosition();
+
+    while ((ticknum + initial.getValue()) >= posSignal.getValueAsDouble()) {
+
+      backLeftMotor.setControl(m_request);
+      backRightMotor.setControl(m_request);
+      frontLeftMotor.setControl(m_request);
+      frontRightMotor.setControl(m_request);
+      // refresh as to get the latest input of data.
+      posSignal.refresh();
+    }
+//stopmotors
+    backLeftMotor.setControl(m_stop);
+    backRightMotor.setControl(m_stop);
+    frontLeftMotor.setControl(m_stop);
+    frontRightMotor.setControl(m_stop);
   }
 
   public void drive(double left, double right) {
@@ -78,14 +110,6 @@ public class driveTrain extends SubsystemBase {
     return new InstantCommand(() -> drive(left, right));
   }
 
-  //
-  public static void driveInDistance(double feet) {
-    current = state.SETTING;
-    backLeftMotor.driveInDistance(feet);
-    frontLeftMotor.driveInDistance(feet);
-    backRightMotor.driveInDistance(feet);
-    frontRightMotor.driveInDistance(feet);
-  }
 
   public static void StopMotors(){
     backLeftMotor.stopMotor();
@@ -157,8 +181,5 @@ public Command C_turntoAngle(double angle){
     Constants.gyroPos = g_ahrs.getAngle();
   }
   
-  @Override
-  public void periodic() {}
-
   
 }
