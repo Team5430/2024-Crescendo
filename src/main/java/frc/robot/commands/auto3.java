@@ -16,11 +16,11 @@ public class auto3 extends Command {
     Optional<Alliance> ali = DriverStation.getAlliance();
 
     if (ali.get() == Alliance.Red) {
-      Commands.sequence(null);
+      Commands.sequence(drive.C_driveInDistance(4),drive.C_driveInDistance(5));
 
     } else {
 
-      Commands.sequence(null);
+      Commands.sequence(drive.C_driveInDistance(4),drive.C_driveInDistance(5));
     }
   }
 }

@@ -13,17 +13,8 @@ public class auto extends Command {
 
   // example auto; will not do anythhing; runs everything in sequence from right to left
   public auto(driveTrain drive, shooterSub shoot, intakeSub intake) {
-    Optional<Alliance> ali = DriverStation.getAlliance();
 
-    // checks what side you are on
-    if (ali.get() == Alliance.Red) {
-      Commands.sequence(null);
+    Commands.sequence(drive.C_driveInDistance(4),drive.C_driveInDistance(5));
 
-    } else {
-      // runs if on blue, or just not connected to FMS
-      Commands.sequence(
-      
-      );
-    }
   }
 }
