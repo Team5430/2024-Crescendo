@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.autoCenter;
 import frc.robot.commands.autoLeft;
 import frc.robot.commands.autoRight;
-import frc.robot.commands.autoCenter;
 import frc.robot.subsystems.driveTrain;
 import frc.robot.subsystems.intakeSub;
 import frc.robot.subsystems.shooterSub;
@@ -44,7 +43,7 @@ public class RobotContainer {
 
     m_shooterSub.motorConfig();
 
-    m_driveTrain.setDefaultCommand(m_driveTrain.C_drive(L_Joy.getY(), R_Joy.getY()));
+    m_driveTrain.setDefaultCommand(m_driveTrain.C_drive(L_Joy.getY(), R_Joy.getY(), m_driveTrain));
 
     // commands
     
@@ -66,7 +65,6 @@ public class RobotContainer {
 
     // trigger first, then the use of it
     Trigger R_joyButton = R_Joy.button(3);
-    Trigger triggershooter = CO_Con.button(2);
 
     R_joyButton.onTrue(new InstantCommand(m_driveTrain::VariableSpeedIncrease, m_driveTrain));
     R_joyButton.onFalse(new InstantCommand(m_driveTrain::VariableSpeedDecrease, m_driveTrain));

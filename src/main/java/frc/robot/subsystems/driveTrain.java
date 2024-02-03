@@ -106,7 +106,7 @@ public class driveTrain extends SubsystemBase {
   }
 
   // Commands are started with "C_" as to identify them as commands rather than methods
-  public Command C_drive(double left, double right) {
+  public Command C_drive(double left, double right, driveTrain driveTrain) {
     return new InstantCommand(() -> drive(left, right));
   }
 
