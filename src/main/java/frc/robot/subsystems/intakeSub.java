@@ -122,26 +122,19 @@ public class intakeSub extends SubsystemBase {
     //5 volts
   //  double gRatio = 5; **gear ratio for the actual shooting part of the intake
 
-    var ticks = pivotMotor.getPosition();
+    double ticks = 2048;
 
+    double ratio = 56/24;
+    //inches
     double diameter = 10;
 
     double angle = 90;
     
-    //convert circumference to value of 1 degree
-    double degreeConversion = (diameter * Math.PI)/360;
+    double Kwanted = ticks * ratio/360 * angle; 
 
-    double wanted = angle * degreeConversion; 
-
-    //compare???
-
-    while(wanted <= ticks.getValueAsDouble()){
-      pivotMotor.set(.3);
-      //update value
-      ticks.refresh();
-    }
-    //OR!
-    pivotMotor.setControl(m_90degrees);
+    PositionDutyCycle wanted = new PositionDutyCycle(Kwanted);
+  
+    pivotMotor.setControl(wanted);
 
     current = state.INTAKING;
 
