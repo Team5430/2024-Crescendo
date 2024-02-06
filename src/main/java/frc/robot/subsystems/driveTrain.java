@@ -27,6 +27,8 @@ public class driveTrain extends SubsystemBase {
   static final TalonFX backRightMotor = new TalonFX(Constants.CANid.backRightMotor);
   static final TalonFX frontRightMotor = new TalonFX(Constants.CANid.frontRightMotor);
 
+  driveTrain drivetrain = new driveTrain();
+
   private static AHRS g_ahrs = new AHRS(SPI.Port.kMXP);
 
   public boolean D_toggle = true;
@@ -106,7 +108,7 @@ public class driveTrain extends SubsystemBase {
   }
 
   // Commands are started with "C_" as to identify them as commands rather than methods
-  public Command C_drive(double left, double right, driveTrain driveTrain) {
+  public  Command C_drive(double left, double right) {
     return new InstantCommand(() -> drive(left, right));
   }
 

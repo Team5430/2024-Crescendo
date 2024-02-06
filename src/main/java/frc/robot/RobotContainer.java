@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.autoCenter;
@@ -43,9 +45,11 @@ public class RobotContainer {
 
     m_shooterSub.motorConfig();
 
-    m_driveTrain.setDefaultCommand(m_driveTrain.C_drive(L_Joy.getY(), R_Joy.getY(), m_driveTrain));
+    //drive active input during match
+    m_driveTrain.setDefaultCommand(
+      new RunCommand( () -> m_driveTrain.drive(L_Joy.getY(), R_Joy.getY()), m_driveTrain));
 
-    // commands
+    // autonmous routines
     
     Command auto_1 = new autoCenter(m_driveTrain, m_shooterSub, m_intakeSub);
     Command auto_2 = new autoLeft(m_driveTrain, m_shooterSub, m_intakeSub);
