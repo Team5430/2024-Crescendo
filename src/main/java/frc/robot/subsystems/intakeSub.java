@@ -118,21 +118,26 @@ public class intakeSub extends SubsystemBase {
 
   public void extendnIntake() {
     current = state.PIVOTING;
+    setPos("Floor");
 
     //5 volts
   //  double gRatio = 5; **gear ratio for the actual shooting part of the intake
 
+  //one rotation with motor
     double ticks = 2048;
-
+//the gearbox ratio
     double ratio = 56/24;
-    //inches
-    double diameter = 10;
-
+//90 degree angle
     double angle = 90;
     
-    double Kwanted = ticks * ratio/360 * angle; 
+    //one rotation
+    double maxTicks = (ticks * ratio)/360; 
 
-    PositionDutyCycle wanted = new PositionDutyCycle(Kwanted);
+    //90 degree rotation
+    double m_90degrees = (maxTicks * angle);
+
+    //sets motor to 90 degrees
+    PositionDutyCycle wanted = new PositionDutyCycle(m_90degrees);
   
     pivotMotor.setControl(wanted);
 
