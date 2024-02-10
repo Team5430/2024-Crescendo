@@ -1,120 +1,187 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.team5430.motors.RoboTires;
-
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class driveTrain extends SubsystemBase {
+
+  private enum state {
+    RESTING,
+    ROTATING,
+    SETTING;
+  }
+
+  // sets current state as RESTING when robot starts up
+  static state current = state.RESTING;
+
+  static final TalonFX backLeftMotor = new TalonFX(Constants.CANid.backLeftMotor);
+  static final TalonFX frontLeftMotor = new TalonFX(Constants.CANid.frontLeftMotor);
+  static final TalonFX backRightMotor = new TalonFX(Constants.CANid.backRightMotor);
+  static final TalonFX frontRightMotor = new TalonFX(Constants.CANid.frontRightMotor);
+
+  driveTrain drivetrain = new driveTrain();
+
+  private static AHRS g_ahrs = new AHRS(SPI.Port.kMXP);
+
+  public boolean D_toggle = true;
+
+  public void motorConfig() {
+    backLeftMotor.setInverted(true);
+    frontLeftMotor.setInverted(true);
+  }
+
+  public void VariableSpeedIncrease() {
+    Constants.multiplier = .9;
+  }
+
+  public void VariableSpeedDecrease() {
+    Constants.multiplier = .5;
+  }
+
+  public void driveInDistance(double feet){
+
+    final DutyCycleOut m_request = new DutyCycleOut(.5);
+
+    final DutyCycleOut m_stop = new DutyCycleOut(0);
+
+    double totalInches = feet * Constants.inches;
+
+    double motorRotations = (totalInches / Constants.circumferenceInInches) * Constants.ratio;
+
+    double ticknum = motorRotations * Constants.encoderTicks;
+
+    var initial = backLeftMotor.getRotorPosition();
+
+    var posSignal = backLeftMotor.getRotorPosition();
+
+    while ((ticknum + initial.getValue()) >= posSignal.getValueAsDouble()) {
+
+      backLeftMotor.setControl(m_request);
+      backRightMotor.setControl(m_request);
+      frontLeftMotor.setControl(m_request);
+      frontRightMotor.setControl(m_request);
+      // refresh as to get the latest input of data.
+      posSignal.refresh();
+    }
+//stopmotors
+    backLeftMotor.setControl(m_stop);
+    backRightMotor.setControl(m_stop);
+    frontLeftMotor.setControl(m_stop);
+    frontRightMotor.setControl(m_stop);
+  }
+
+  public void drive(double left, double right) {
+
+    // record inputs
+    DutyCycleOut m_left = new DutyCycleOut(left / 2 * Constants.multiplier);
+    DutyCycleOut m_right = new DutyCycleOut(right / 2 * Constants.multiplier);
+
+    backLeftMotor.setControl(m_left);
+    frontLeftMotor.setControl(m_left);
+    backRightMotor.setControl(m_right);
+    frontRightMotor.setControl(m_right);   
+  }
+
+  // toggle between coast and break mode.
+  public void CoastingBreakToggle() {
+    if (D_toggle) {
+      backLeftMotor.setNeutralMode(NeutralModeValue.Coast);
+      frontLeftMotor.setNeutralMode(NeutralModeValue.Coast);
+      backRightMotor.setNeutralMode(NeutralModeValue.Coast);
+      frontRightMotor.setNeutralMode(NeutralModeValue.Coast);
+      D_toggle = false;
+    } else {
+      backLeftMotor.setNeutralMode(NeutralModeValue.Brake);
+      frontLeftMotor.setNeutralMode(NeutralModeValue.Brake);
+      backRightMotor.setNeutralMode(NeutralModeValue.Brake);
+      frontRightMotor.setNeutralMode(NeutralModeValue.Brake);
+      D_toggle = true;
+    }
+  }
+
+  // Commands are started with "C_" as to identify them as commands rather than methods
+  public  Command C_drive(double left, double right) {
+    return new InstantCommand(() -> drive(left, right));
+  }
+
+
+  public static void StopMotors(){
+    backLeftMotor.stopMotor();
+    backRightMotor.stopMotor();
+    frontLeftMotor.stopMotor();
+    frontRightMotor.stopMotor();
+  }
+
+  public void RunMotors(double speed){
+    backLeftMotor.set(speed);
+    backRightMotor.set(speed);
+    frontLeftMotor.set(speed);
+    frontRightMotor.set(speed);
     
-    final static RoboTires backLeftMotor = new RoboTires(Constants.CANid.backLeftMotor);
-    final static RoboTires frontLeftMotor = new RoboTires(Constants.CANid.frontLeftMotor);
-    final static RoboTires backRightMotor = new RoboTires(Constants.CANid.backRightMotor);
-    final static RoboTires frontRightMotor = new RoboTires(Constants.CANid.frontRightMotor);
-    //grouping
-    final static MotorControllerGroup Lgroup = new MotorControllerGroup(backLeftMotor, frontLeftMotor);
-    final static MotorControllerGroup Rgroup = new MotorControllerGroup(backRightMotor, frontRightMotor);
-    static SupplyCurrentLimitConfiguration configTalonCurrent = new SupplyCurrentLimitConfiguration(true,55,0,0);
+  }
 
- 
- //when a button is pressed the solenoid goes up and when you press another button it goes down.
-   public static DoubleSolenoid driveshifter = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1); //change to right pneumatic module
- //When we press a button the flag goes up and when the second button is pressed it retacts.
-     public static DoubleSolenoid Pushypush = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 2, 3);//change to right pneumatic module
- 
-   //When a button is held down it will drive faster
-     public static Command driveToggle() {      
-         return new InstantCommand(
-             () -> driveshifter.toggle()
-     );
- }
- 
-     //It sets the drive value forward
-     public static void pneumaticENABLE(){
-         driveshifter.set(Value.kReverse);
-         Pushypush.set(Value.kReverse);
+  /**positive speed value turns RIGHT; neagtive speed value turns LEFT */
+  public static void TurnRobot(double speed){
+    backLeftMotor.set(speed);
+    backRightMotor.set(-speed);
+    frontLeftMotor.set(speed);
+    frontRightMotor.set(-speed);
+  }
+
+  public Command C_driveinFeet(double feet) {
+    return new InstantCommand(() -> driveInDistance(feet));
+  }
+
+  public Command C_driveinInches(double inches) {
+    return new InstantCommand(() -> driveInDistance(inches/12));
+  }
+
+/** Turn to a desired angle, Negative going counter clockwise, and Positive clockwise */
+  public static void turntoAngle(double angle){
+
+    g_ahrs.reset();
+  
+    double initial = g_ahrs.getAngle();
+  
+    //if its negative, we want to turn left
+    if(angle == -Math.abs(angle)){
+      //while current angle is less than the current angle + wanted
+      while((initial + angle) <= g_ahrs.getAngle()){
+        TurnRobot(-.3);
+      UpdateVal();
      }
-     
-     public static Command RighTriggerOn() {
-         return new InstantCommand(
-         () ->  Pushypush.set(Value.kForward)
-         );
+   StopMotors();
+   }else{
+      while((initial + angle) >= g_ahrs.getAngle()){
+        TurnRobot(+.3);
+      UpdateVal();
      }
- 
-     public static Command LefTriggerOff() {
-         return new InstantCommand(
-         () ->  Pushypush.set(Value.kReverse)
-         );
-     } 
- 
-     //Makes the left and right groups of motors move half speed
-   //  public void drive(double left, double right){
-     
-     //    frontrightmotor.set(ControlMode.PercentOutput, right/2); 
-      //   backrightmotor.set(ControlMode.PercentOutput, right/2);
-      //   frontleftmotor.set(ControlMode.PercentOutput, -left/2);  
-      //   backleftmotor.set(ControlMode.PercentOutput, -left/2);
-   //  }
- 
-     //Akira will take a left and right value, and run the drive function using those values.
-     //The left motors will move in the negative direction
-     public Command Akira (double left, double right){
-         return new InstantCommand(
-             () -> drive(-left, right)
-         );
-     }
- 
-    public void motorSettings(){
-        backLeftMotor.setInverted(true);
-        frontLeftMotor.setInverted(true);
-        //CONFIG
-        backLeftMotor.configSupplyCurrentLimit(configTalonCurrent);
-        frontLeftMotor.configSupplyCurrentLimit(configTalonCurrent);
-        backRightMotor.configSupplyCurrentLimit(configTalonCurrent);
-        frontRightMotor.configSupplyCurrentLimit(configTalonCurrent);
-    }
-
-    public void VariableSpeedIncrease(){
-        Constants.multiplier += .1;
-    }
-
-    public void VariableSpeedDecrease(){
-        Constants.multiplier -= .1;
-    }
-    public void drive(double left, double right){
-        Lgroup.set(left);
-        Rgroup.set(right);        
-    }
-//Commands are started with "C_" as to identify them as commands rather than methods
-    public Command C_drive(double left, double right){
-        return new InstantCommand(
-            () -> drive(left, right)
-        );
-    }
-        //  
-    public void driveInDistance(double feet){
-        backLeftMotor.driveInDistance(feet);
-        frontLeftMotor.driveInDistance(feet);
-        backRightMotor.driveInDistance(feet);
-        frontRightMotor.driveInDistance(feet);
-    }
-
-    public Command C_driveInDistance(double feet){
-        return new InstantCommand(
-        () -> driveInDistance(feet)
-        );
-    }
-
-@Override
-public void periodic(){
-
+   StopMotors();
+   }
 }
+
+/**Negative turns CounterClockwise, while positive, Clockwise COMMAND VERSION */
+public Command C_turntoAngle(double angle){
+  return new InstantCommand(() -> turntoAngle(angle));
+}
+
+  /** Returns current State as a String */
+  public String getState() {
+    return current.toString();
+  }
+
+  //used a fix for a present delay
+  public static void UpdateVal(){
+    Constants.gyroPos = g_ahrs.getAngle();
+  }
+  
+  
 }
