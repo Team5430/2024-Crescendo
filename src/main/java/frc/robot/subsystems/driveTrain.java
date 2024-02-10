@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.kauailabs.navx.frc.AHRS;
@@ -44,37 +43,65 @@ public class driveTrain extends SubsystemBase {
   public void VariableSpeedDecrease() {
     Constants.multiplier = .5;
   }
+//drive in feet
+  public static void driveInDistance(double feet){
 
-  public void driveInDistance(double feet){
-
-    final DutyCycleOut m_request = new DutyCycleOut(.5);
-
-    final DutyCycleOut m_stop = new DutyCycleOut(0);
+    double output = .5;
 
     double totalInches = feet * Constants.inches;
 
-    double motorRotations = (totalInches / Constants.circumferenceInInches) * Constants.ratio;
+    double motorRotations = (totalInches / Constants.circumferenceInInches) * Constants.ratio * Constants.encoderTicks;
 
-    double ticknum = motorRotations * Constants.encoderTicks;
+    var initial = backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks;
 
-    var initial = backLeftMotor.getRotorPosition();
+    backLeftMotor.setPosition(0);
+    backRightMotor.setPosition(0);
+    frontLeftMotor.setPosition(0);
+    frontRightMotor.setPosition(0);
 
-    var posSignal = backLeftMotor.getRotorPosition();
+//both < and > implemeneted to account for negative and positive value
+if(Math.abs(feet) == feet){
+      while ((motorRotations + initial) >= backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks) {
+    RunMotors(output);
+    } 
+}else{
+  while ((motorRotations + initial) <= backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks) {
+    RunMotors(-output);
+  }
+}
 
-    while ((ticknum + initial.getValue()) >= posSignal.getValueAsDouble()) {
-
-      backLeftMotor.setControl(m_request);
-      backRightMotor.setControl(m_request);
-      frontLeftMotor.setControl(m_request);
-      frontRightMotor.setControl(m_request);
-      // refresh as to get the latest input of data.
-      posSignal.refresh();
-    }
 //stopmotors
-    backLeftMotor.setControl(m_stop);
-    backRightMotor.setControl(m_stop);
-    frontLeftMotor.setControl(m_stop);
-    frontRightMotor.setControl(m_stop);
+System.out.println("Stopping Motors.");
+    StopMotors();
+  }
+
+  public static void driveInInches(double inches){
+
+    double output = .5;
+
+    double totalInches = inches;
+
+    double motorRotations = (totalInches / Constants.circumferenceInInches) * Constants.ratio * Constants.encoderTicks;
+
+    backLeftMotor.setPosition(0);
+    backRightMotor.setPosition(0);
+    frontLeftMotor.setPosition(0);
+    frontRightMotor.setPosition(0);
+
+    var initial = backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks;
+
+if(Math.abs(inches) == inches){
+    while ((motorRotations + initial) >=  backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks) {
+      RunMotors(output);
+    }
+}else{
+     while ((motorRotations + initial) <=  backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks) {
+      RunMotors(-output);
+    }
+}
+//stopmotors
+    System.out.println("Stopping Motors.");
+  StopMotors();
   }
 
   public void drive(double left, double right) {
@@ -84,23 +111,6 @@ public class driveTrain extends SubsystemBase {
     backRightMotor.set((right / 2 * Constants.multiplier));
     frontRightMotor.set((right / 2 * Constants.multiplier));
     
-  }
-
-  // toggle between coast and break mode.
-  public void CoastingBreakToggle() {
-    if (D_toggle) {
-      backLeftMotor.setNeutralMode(NeutralModeValue.Coast);
-      frontLeftMotor.setNeutralMode(NeutralModeValue.Coast);
-      backRightMotor.setNeutralMode(NeutralModeValue.Coast);
-      frontRightMotor.setNeutralMode(NeutralModeValue.Coast);
-      D_toggle = false;
-    } else {
-      backLeftMotor.setNeutralMode(NeutralModeValue.Brake);
-      frontLeftMotor.setNeutralMode(NeutralModeValue.Brake);
-      backRightMotor.setNeutralMode(NeutralModeValue.Brake);
-      frontRightMotor.setNeutralMode(NeutralModeValue.Brake);
-      D_toggle = true;
-    }
   }
 
   // Commands are started with "C_" as to identify them as commands rather than methods
@@ -116,7 +126,7 @@ public class driveTrain extends SubsystemBase {
     frontRightMotor.stopMotor();
   }
 
-  public void RunMotors(double speed){
+  public static void RunMotors(double speed){
     backLeftMotor.set(speed);
     backRightMotor.set(speed);
     frontLeftMotor.set(speed);
@@ -126,10 +136,10 @@ public class driveTrain extends SubsystemBase {
 
   /**positive speed value turns RIGHT; neagtive speed value turns LEFT */
   public static void TurnRobot(double speed){
-    backLeftMotor.set(speed);
-    backRightMotor.set(-speed);
-    frontLeftMotor.set(speed);
-    frontRightMotor.set(-speed);
+    backLeftMotor.set(-speed);
+    backRightMotor.set(speed);
+    frontLeftMotor.set(-speed);
+    frontRightMotor.set(speed);
   }
 
   public Command C_driveinFeet(double feet) {
@@ -137,7 +147,7 @@ public class driveTrain extends SubsystemBase {
   }
 
   public Command C_driveinInches(double inches) {
-    return new InstantCommand(() -> driveInDistance(inches/12));
+    return new InstantCommand(() -> driveInInches(inches));
   }
 
 /** Turn to a desired angle, Negative going counter clockwise, and Positive clockwise */
@@ -177,7 +187,10 @@ public Command C_turntoAngle(double angle){
   //used a fix for a present delay
   public static void UpdateVal(){
     Constants.gyroPos = g_ahrs.getAngle();
+  }  
+
+  public static void UpdateVals(){
+
   }
-  
   
 }

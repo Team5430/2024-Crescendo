@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -41,18 +43,15 @@ public class RobotContainer {
     //drive active input during match
     m_driveTrain.setDefaultCommand(
      new RunCommand( () -> m_driveTrain.drive(L_Joy.getY(), R_Joy.getY()), m_driveTrain));
-    // autonmous routines
-    
-
-
-    
+  
     // shuffleboard options
-    
+  
+    m_chooser.addOption("Right", Autos.autoRight(m_driveTrain));
+    m_chooser.setDefaultOption("Left", Autos.autoLeft(m_driveTrain));
+    m_chooser.addOption("Center", Autos.autoCenter(m_driveTrain));
 
-    m_chooser.setDefaultOption("Auton 1", Autos.autoRight(m_driveTrain));
-    m_chooser.addOption("Auton 2", Autos.autoLeft(m_driveTrain));
-    m_chooser.addOption("Auton 3", Autos.autoCenter(m_driveTrain));
-
+    Shuffleboard.getTab("Auton")
+     .add("AutonChoice", m_chooser);
     
   }
 

@@ -49,7 +49,7 @@ public class Autos {
       //intake.C_waitCommand(.5),//lets the note be flung out with time
       //intake.C_stopIntake(),//turns off the intake motor
       //shoot.C_ShooterStop(),//turns off the shooter motor
-      drive.C_driveinInches(-11.046),//moves backwards 11.046 inches
+      drive.C_driveinInches(11.046),//moves backwards 11.046 inches
       drive.C_turntoAngle(60.02),//turns the robot 60.02 degrees right
       //intake.C_extendnintake(),//moves the intake to the floor pivot positionand turns on the intake motor
       drive.C_driveinInches(-55.5),//moves backwards 55.5 inches, picking up the note in a sweep
