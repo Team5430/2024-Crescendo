@@ -2,7 +2,7 @@ package frc.robot;
 
 public class Constants {
 
-  public static double multiplier = 0;
+  public static double multiplier = .5;
   public static double gyroPos = 0;
   public static double ratio = 10.71;
   public static double encoderTicks = 2048;

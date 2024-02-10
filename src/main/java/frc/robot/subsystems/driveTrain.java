@@ -42,7 +42,7 @@ public class driveTrain extends SubsystemBase {
   }
 
   public void VariableSpeedDecrease() {
-    Constants.multiplier = -.9;
+    Constants.multiplier = .5;
   }
 
   public void driveInDistance(double feet){
@@ -79,21 +79,11 @@ public class driveTrain extends SubsystemBase {
 
   public void drive(double left, double right) {
 
-    // record inputs
-    /* 
-    DutyCycleOut m_left = new DutyCycleOut(left / 2 * Constants.multiplier);
-    DutyCycleOut m_right = new DutyCycleOut(right / 2 * Constants.multiplier);
-    */
-   
-    backLeftMotor.setControl(new DutyCycleOut(left / 2 * Constants.multiplier));
-    frontLeftMotor.setControl(new DutyCycleOut(left / 2 * Constants.multiplier));
-    backRightMotor.setControl(new DutyCycleOut(right / 2 * Constants.multiplier));
-    frontRightMotor.setControl(new DutyCycleOut(right / 2 * Constants.multiplier));
+    backLeftMotor.set((left / 2 * Constants.multiplier));
+    frontLeftMotor.set((left / 2 * Constants.multiplier));
+    backRightMotor.set((right / 2 * Constants.multiplier));
+    frontRightMotor.set((right / 2 * Constants.multiplier));
     
-    /* 
-    m_motor.setControl(new DutyCycleOut(left / 2 * Constants.multiplier));
-    m_motor.setControl(new DutyCycleOut(right / 2 * Constants.multiplier));
-    */
   }
 
   // toggle between coast and break mode.
