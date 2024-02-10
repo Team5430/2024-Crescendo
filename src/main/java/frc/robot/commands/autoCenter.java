@@ -10,19 +10,19 @@ import frc.robot.subsystems.shooterSub;
 public class autoCenter extends Command {
 
   
-  public autoCenter(driveTrain drive, shooterSub shoot, intakeSub intake) {
-
+  public autoCenter(driveTrain drive) {
+//commented actions are temporary for testing
     Commands.sequence(
-      shoot.C_ShooterOut(),
-      intake.C_outtake(),
-      intake.C_extendnintake(),
+      //shoot.C_ShooterOut(),
+      //intake.C_outtake(),
+      //intake.C_extendnintake(),
       drive.C_driveinInches(-36),
-      intake.C_setPos("Shooter"),
-      intake.C_stopIntake(),
+      //intake.C_setPos("Shooter"),
+      //intake.C_stopIntake(),
       drive.C_driveinInches(36),
-      intake.C_outtake(),
-      shoot.C_ShooterStop(),
-      intake.C_stopIntake(),
+      //intake.C_outtake(),
+      //shoot.C_ShooterStop(),
+      //intake.C_stopIntake(),
       drive.C_driveinInches(-36)
     );
 

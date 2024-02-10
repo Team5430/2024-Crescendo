@@ -27,7 +27,6 @@ public class driveTrain extends SubsystemBase {
   static final TalonFX backRightMotor = new TalonFX(Constants.CANid.backRightMotor);
   static final TalonFX frontRightMotor = new TalonFX(Constants.CANid.frontRightMotor);
 
-  driveTrain drivetrain = new driveTrain();
 
   private static AHRS g_ahrs = new AHRS(SPI.Port.kMXP);
 
@@ -43,7 +42,7 @@ public class driveTrain extends SubsystemBase {
   }
 
   public void VariableSpeedDecrease() {
-    Constants.multiplier = .5;
+    Constants.multiplier = -.9;
   }
 
   public void driveInDistance(double feet){
@@ -81,13 +80,20 @@ public class driveTrain extends SubsystemBase {
   public void drive(double left, double right) {
 
     // record inputs
+    /* 
     DutyCycleOut m_left = new DutyCycleOut(left / 2 * Constants.multiplier);
     DutyCycleOut m_right = new DutyCycleOut(right / 2 * Constants.multiplier);
-
-    backLeftMotor.setControl(m_left);
-    frontLeftMotor.setControl(m_left);
-    backRightMotor.setControl(m_right);
-    frontRightMotor.setControl(m_right);   
+    */
+   
+    backLeftMotor.setControl(new DutyCycleOut(left / 2 * Constants.multiplier));
+    frontLeftMotor.setControl(new DutyCycleOut(left / 2 * Constants.multiplier));
+    backRightMotor.setControl(new DutyCycleOut(right / 2 * Constants.multiplier));
+    frontRightMotor.setControl(new DutyCycleOut(right / 2 * Constants.multiplier));
+    
+    /* 
+    m_motor.setControl(new DutyCycleOut(left / 2 * Constants.multiplier));
+    m_motor.setControl(new DutyCycleOut(right / 2 * Constants.multiplier));
+    */
   }
 
   // toggle between coast and break mode.

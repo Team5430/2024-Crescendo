@@ -22,9 +22,7 @@ public class RobotContainer {
 
   // subsystems
   private driveTrain m_driveTrain = new driveTrain();
-  private shooterSub m_shooterSub = new shooterSub();
-  private intakeSub m_intakeSub = new intakeSub();
-
+  
 
   public CommandJoystick L_Joy = new CommandJoystick(Constants.OperatorC.L_Joy);
   public CommandJoystick R_Joy = new CommandJoystick(Constants.OperatorC.R_Joy);
@@ -41,19 +39,18 @@ public class RobotContainer {
     //motor configs
     m_driveTrain.motorConfig();
 
-    m_intakeSub.motorConfig();
-
-    m_shooterSub.motorConfig();
+    //m_intakeSub.motorConfig();
+//Temporary Comment out
+    //m_shooterSub.motorConfig();
 
     //drive active input during match
     m_driveTrain.setDefaultCommand(
-      new RunCommand( () -> m_driveTrain.drive(L_Joy.getY(), R_Joy.getY()), m_driveTrain));
-
+     new RunCommand( () -> m_driveTrain.drive(L_Joy.getY(), R_Joy.getY()), m_driveTrain));
     // autonmous routines
     
-    Command auto_1 = new autoCenter(m_driveTrain, m_shooterSub, m_intakeSub);
-    Command auto_2 = new autoLeft(m_driveTrain, m_shooterSub, m_intakeSub);
-    Command auto_3 = new autoRight(m_driveTrain, m_shooterSub, m_intakeSub);
+    Command auto_1 = new autoCenter(m_driveTrain);
+    Command auto_2 = new autoLeft(m_driveTrain);
+    Command auto_3 = new autoRight(m_driveTrain);
 
     
     // shuffleboard options
@@ -69,10 +66,10 @@ public class RobotContainer {
 
     // trigger first, then the use of it
     Trigger R_joyButton = R_Joy.button(3);
-
+    Trigger L_joyButton = L_Joy.button(3);
     R_joyButton.onTrue(new InstantCommand(m_driveTrain::VariableSpeedIncrease, m_driveTrain));
-    R_joyButton.onFalse(new InstantCommand(m_driveTrain::VariableSpeedDecrease, m_driveTrain));
-    
+    L_joyButton.onFalse(new InstantCommand(m_driveTrain::VariableSpeedDecrease, m_driveTrain));
+        
   }
 
   public Command getAutonomousCommand() {

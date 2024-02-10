@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 
 public class intakeSub extends SubsystemBase {
-
+/* 
   private enum state {
     RESTING,
     PIVOTING,
@@ -26,12 +26,14 @@ public class intakeSub extends SubsystemBase {
     AMP
   }
 
+  */
   /*
    * 
    * WHEN INTAKE AND outtake BOTH @ShooterSub and @intakeSub SHALL DO THE SAME THING; if one intakes so does the other; requested per design tem
    * 
    */
 
+   /* 
   static TalonFX pivotMotor = new TalonFX(Constants.CANid.pivotMotor);
 
   static TalonSRX intakeMotor = new TalonSRX(Constants.CANid.intakeMotor);
@@ -98,6 +100,8 @@ public class intakeSub extends SubsystemBase {
    * @param Position options are "Shooter", "Amp", "Floor"
    * 
    */
+
+   /* 
   public void setPos(String Position){
 
     switch(Position) {
@@ -147,36 +151,54 @@ public class intakeSub extends SubsystemBase {
   /** @param Position of pivot motor (Three states) 
    * "Shooter", "Amp", "Floor"
   */
+  
+  /* 
+
   public Command C_setPos(String Position){
     return new InstantCommand(() -> setPos(Position));
   }
+  */
+
+  
   /**Resets position of pivotMotor to starting position (Shooter position) */
+  /* 
   public Command C_resetPos(){
     return new InstantCommand(() -> resetPos());
   }
+  */
   /**Extends to floor and intakes*/
+  /*
   public Command C_extendnintake(){
     return new InstantCommand(() -> extendnIntake());
   }
   /**Power of intakeMotor is set to intake */
+  /* 
   public Command C_intake(){
     return new InstantCommand(() -> intake());
   }
+  */
   /**Power of intakeMotor is set to outake */
+  /* 
   public Command C_outtake(){
     return new InstantCommand(() -> outtake());
   }
   /**Stops intakeMotor */
+  /* 
   public Command C_stopIntake(){
     return new InstantCommand(() -> stopIntake());
   }
   /**Delay with seconds */
+  /* 
   public Command C_waitCommand(double seconds){
     return new WaitCommand(seconds);
   }
 
+
   /** Returns current State as a String */
+  /* 
   public String getState() {
     return current.toString();
   }
+   
+  */
 }
