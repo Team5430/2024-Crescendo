@@ -10,6 +10,7 @@ public class Constants {
   public static double inches = 12;
 
   public static class CANid {
+    public static final int hangmotor = 0;
     // Talons CANid
     public static int backLeftMotor = 2;
     public static int frontLeftMotor = 4;
