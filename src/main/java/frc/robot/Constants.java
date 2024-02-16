@@ -8,6 +8,7 @@ public class Constants {
   public static double encoderTicks = 2048;
   public static double circumferenceInInches = 6 * Math.PI;
   public static double inches = 12;
+  public static double Iratio = 7/3; 
 
   public static class CANid {
     public static final int hangmotor = 0;
@@ -16,6 +17,9 @@ public class Constants {
     public static int frontLeftMotor = 4;
     public static int backRightMotor = 3;
     public static int frontRightMotor = 5;
+    public static int shooterMotor = 7;
+    public static int pivotMotor = 9;
+    public static int intakeMotor = 10;
   }
 
   public static class OperatorC {

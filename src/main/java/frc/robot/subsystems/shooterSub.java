@@ -11,7 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 public class shooterSub extends SubsystemBase{
   
-  /*  
+  
     static TalonSRX shooterMotor = new TalonSRX(Constants.CANid.shooterMotor);
 
     public shooterSub(){}
@@ -31,19 +31,19 @@ public class shooterSub extends SubsystemBase{
     public void ShooterStop(){
         shooterMotor.set(ControlMode.PercentOutput, 0);
     }
-    /**Sets motor to shoot out gamepiece*/
-  //  public Command C_ShooterOut(){
- //       return new InstantCommand(() -> ShooterOut());
-//    }
+    /** Sets motor to shoot out gamepiece*/
+    public Command C_ShooterOut(){
+        return new InstantCommand(() -> ShooterOut());
+    }
     
     /**Sets motor to intake gamepiece*/
-  //  public Command C_ShooterIn(){
- //       return new InstantCommand(() -> ShooterIn());
-//    }
+    public Command C_ShooterIn(){
+        return new InstantCommand(() -> ShooterIn());
+    }
 
     /**Stops motor*/
-   // public Command C_ShooterStop(){
-  //      return new InstantCommand(() -> ShooterStop());
- //  }
+    public Command C_ShooterStop(){
+        return new InstantCommand(() -> ShooterStop());
+   }
  
 }
