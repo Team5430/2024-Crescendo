@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 public class hangSub extends SubsystemBase{
 
     static TalonSRX hangmotor = new TalonSRX(Constants.CANid.hangmotor);
+   // static TalonSRX hangmotor = new TalonSRX(15);
     public state current = state.RESTING;
     private Timer timer = new Timer();
 
@@ -27,18 +28,32 @@ public class hangSub extends SubsystemBase{
     }
 
 public void extendclimbertimer(){
+    timer.restart();
+    System.out.println("A button pressed");
     if(current == state.RESTING){
         while(timer.get() <= 5){
             hangmotor.set(ControlMode.PercentOutput, .5);
-            current = state.EXTENDED;
         }
-    }else{
+        current = state.EXTENDED;
+        
+    }
+    else{
         while(timer.get() <= 5){
                     hangmotor.set(ControlMode.PercentOutput, -.5);
-                    current = state.EXTENDED;
+                    
                 }
+            current = state.RESTING;
     }
+    System.out.println(timer.get());
     }
+
+    public Command C_ExtendClimberTimer(){
+      return new InstantCommand(() -> extendclimbertimer());
+        }
+
+    public Command C_Doe(){
+      return new InstantCommand(() -> System.out.println("AHOY AHOY COMMANDS AIN'T WORKING"));
+        }
         
     }   
 

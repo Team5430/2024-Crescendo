@@ -14,11 +14,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Autos;
 import frc.robot.subsystems.driveTrain;
+import frc.robot.subsystems.hangSub;
 
 public class RobotContainer {
 
   // subsystems
   private driveTrain m_driveTrain = new driveTrain();
+  private hangSub m_HangSub = new hangSub();
   
 
   public CommandJoystick L_Joy = new CommandJoystick(Constants.OperatorC.L_Joy);
@@ -43,6 +45,7 @@ public class RobotContainer {
     //drive active input during match
     m_driveTrain.setDefaultCommand(
      new RunCommand( () -> m_driveTrain.drive(L_Joy.getY(), R_Joy.getY()), m_driveTrain));
+    
   
     // shuffleboard options
   
@@ -59,9 +62,15 @@ public class RobotContainer {
 
     // trigger first, then the use of it
     Trigger R_joyButton = R_Joy.button(3);
+    Trigger A_Button = CO_Con.button(1);
+    Trigger B_Button = CO_Con.button(2);
     R_joyButton.onTrue(new InstantCommand(m_driveTrain::VariableSpeedIncrease, m_driveTrain));
     R_joyButton.onFalse(new InstantCommand(m_driveTrain::VariableSpeedDecrease, m_driveTrain));
         
+   //A_Button.toggleOnTrue(new InstantCommand(m_HangSub::C_Doe, m_HangSub));
+   A_Button.onTrue(m_HangSub.C_Doe());
+   // B_Button.onTrue(new InstantCommand(m_HangSub:: C_ExtendClimberTimer));
+   B_Button.onTrue(m_HangSub.C_ExtendClimberTimer());
   }
 
   public Command getAutonomousCommand() {
