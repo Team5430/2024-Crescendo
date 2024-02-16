@@ -5,6 +5,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -63,15 +64,20 @@ public class driveTrain extends SubsystemBase {
 if(Math.abs(feet) == feet){
       while ((motorRotations + initial) >= backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks) {
     RunMotors(output);
+    System.out.println("Current position: " + backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks);
+    System.out.println(backLeftMotor.getRotorPosition());
+    System.out.println("Will be less than: " + motorRotations + initial);
     } 
 }else{
   while ((motorRotations + initial) <= backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks) {
     RunMotors(-output);
+    System.out.println("Current position: " + backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks);
+    System.out.println("Will be greater than: " + motorRotations + initial);
   }
 }
 
 //stopmotors
-System.out.println("Stopping Motors.");
+System.out.println("Stopping Motors. (feet)");
     StopMotors();
   }
 
@@ -79,8 +85,10 @@ System.out.println("Stopping Motors.");
 
     double output = .5;
 
+    //Sets a total amount of inches needed to tracvel
     double totalInches = inches;
 
+    //The amount of 
     double motorRotations = (totalInches / Constants.circumferenceInInches) * Constants.ratio * Constants.encoderTicks;
 
     backLeftMotor.setPosition(0);
@@ -97,12 +105,37 @@ if(Math.abs(inches) == inches){
 }else{
      while ((motorRotations + initial) <=  backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks) {
       RunMotors(-output);
+      System.out.println("Current position: " + backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks);
+      System.out.println(backLeftMotor.getRotorPosition());
+      System.out.println("Will be greater than: " + motorRotations + initial);
+      SmartDashboard.putNumber("Current Position: ", backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks);
+      SmartDashboard.putNumber("Will be greater than", motorRotations);
     }
 }
 //stopmotors
-    System.out.println("Stopping Motors.");
+    System.out.println("Stopping Motors. (inches)");
   StopMotors();
   }
+
+  public static void myNewcommand(double inches){
+
+    double rotationsNeeded = (Constants.ratio * inches) / Constants.circumferenceInInches;
+    double initial = (backLeftMotor.getRotorPosition().getValueAsDouble());
+
+    if(inches > 0){
+      while(backLeftMotor.getRotorPosition().getValueAsDouble() - initial < rotationsNeeded){
+        RunMotors(0.5);
+      }
+    }
+    else{
+      while(backLeftMotor.getRotorPosition().getValueAsDouble() - initial > rotationsNeeded){
+        RunMotors(-0.5);
+      }
+    }
+    RunMotors(0);
+    
+  }
+  
 
   public void drive(double left, double right) {
 
@@ -177,6 +210,10 @@ if(Math.abs(inches) == inches){
 /**Negative turns CounterClockwise, while positive, Clockwise COMMAND VERSION */
 public Command C_turntoAngle(double angle){
   return new InstantCommand(() -> turntoAngle(angle));
+}
+
+public Command C_myCommand(double inch){
+  return new InstantCommand(() -> myNewcommand(inch));
 }
 
   /** Returns current State as a String */

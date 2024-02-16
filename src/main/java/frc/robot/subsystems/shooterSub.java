@@ -37,14 +37,14 @@ public class shooterSub extends SubsystemBase{
        // shooterMotor.set(ControlMode.PercentOutput, 0);
        shooterMotor.set(0.5);
     }
-    /**Sets motor to shoot out gamepiece*/
+    /** Sets motor to shoot out gamepiece*/
     public Command C_ShooterOut(){
         return new InstantCommand(() -> ShooterOut());
     }
     
     /**Sets motor to intake gamepiece*/
     public Command C_ShooterIn(){
-       return new InstantCommand(() -> ShooterIn());
+        return new InstantCommand(() -> ShooterIn());
     }
 
     /**Stops motor*/

@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 
 public class intakeSub extends SubsystemBase {
-/* 
+
   private enum state {
     RESTING,
     PIVOTING,
@@ -26,14 +26,12 @@ public class intakeSub extends SubsystemBase {
     AMP
   }
 
-  */
   /*
    * 
    * WHEN INTAKE AND outtake BOTH @ShooterSub and @intakeSub SHALL DO THE SAME THING; if one intakes so does the other; requested per design tem
    * 
    */
-
-   /* 
+ 
   static TalonFX pivotMotor = new TalonFX(Constants.CANid.pivotMotor);
 
   static TalonSRX intakeMotor = new TalonSRX(Constants.CANid.intakeMotor);
@@ -50,11 +48,11 @@ public class intakeSub extends SubsystemBase {
 
   final PositionDutyCycle m_inital = new PositionDutyCycle(initial);
 
-  // 2048/4 as to get 90 degrees in rotational units
-  final PositionDutyCycle m_90degrees = new PositionDutyCycle(512);
+  // 1/4 as to get 90 degrees in rotational units, multiplied by 7/3 to translate it to gear ratio
+  final PositionDutyCycle m_90degrees = new PositionDutyCycle(.25 * Constants.Iratio);
 
-  //135 degrees
-  final PositionDutyCycle m_floor = new PositionDutyCycle(768);
+  // degrees
+  final PositionDutyCycle m_floor = new PositionDutyCycle(.375 * Constants.Iratio);
 
   public intakeSub() {}
 
@@ -65,6 +63,8 @@ public class intakeSub extends SubsystemBase {
     slot0configs.kP = .15;
 
     pivotMotor.getConfigurator().apply(slot0configs);
+
+    //reset positon
 
   }
 
@@ -101,19 +101,18 @@ public class intakeSub extends SubsystemBase {
    * 
    */
 
-   /* 
   public void setPos(String Position){
 
     switch(Position) {
 
       case "Shooter":
-        pivotMotor.setControl(m_inital);
+        pos(0);
           break;
       case "Amp":
-        pivotMotor.setControl(m_90degrees);
+        pos(90);
           break;
       case "Floor":
-        pivotMotor.setControl(m_floor);
+        pos(120);
           break;
 
     }
@@ -122,88 +121,103 @@ public class intakeSub extends SubsystemBase {
 
   public void extendnIntake() {
     current = state.PIVOTING;
-    setPos("Floor");
-
     //5 volts
   //  double gRatio = 5; **gear ratio for the actual shooting part of the intake
 
-  //one rotation with motor
-    double ticks = 2048;
-//the gearbox ratio
-    double ratio = 56/24;
-//90 degree angle
+ //90 degree angle
     double angle = 90;
     
     //one rotation
-    double maxTicks = (ticks * ratio)/360; 
+    double max = (Constants.Iratio)/360; 
 
     //90 degree rotation
-    double m_90degrees = (maxTicks * angle);
+    double m_90degrees = (max * angle);
 
     //sets motor to 90 degrees
-    PositionDutyCycle wanted = new PositionDutyCycle(m_90degrees);
+
+    var inital = pivotMotor.getRotorPosition().getValueAsDouble();
   
-    pivotMotor.setControl(wanted);
+    while(inital + m_90degrees >= pivotMotor.getRotorPosition().getValueAsDouble()){
+      pivotMotor.set(.5);
+    }
+
+    pivotMotor.stopMotor();
 
     current = state.INTAKING;
 
     intake();
     
   }
+
+  public static void pos(double degrees){
+
+    double max = Constants.Iratio/360;
+
+    double Kwanted = (degrees * max);
+
+    var inital = pivotMotor.getRotorPosition().getValueAsDouble();
+
+    if(Math.abs(degrees) == degrees){
+      while((inital + Kwanted) >= pivotMotor.getRotorPosition().getValueAsDouble()){
+      pivotMotor.set(.5);
+    }
+  }else{
+      while((inital + Kwanted) <= pivotMotor.getRotorPosition().getValueAsDouble()){
+        pivotMotor.set(-.5);
+      }
+  }
+  pivotMotor.stopMotor();
+
+  }
   
   //commands
 
   /** @param Position of pivot motor (Three states) 
-   * "Shooter", "Amp", "Floor"
-  */
+   * "Shooter", "Amp", "Floor" */
   
-  /* 
-
   public Command C_setPos(String Position){
     return new InstantCommand(() -> setPos(Position));
   }
-  */
-
   
   /**Resets position of pivotMotor to starting position (Shooter position) */
-  /* 
+   
   public Command C_resetPos(){
     return new InstantCommand(() -> resetPos());
   }
-  */
+  
   /**Extends to floor and intakes*/
-  /*
+  
   public Command C_extendnintake(){
     return new InstantCommand(() -> extendnIntake());
   }
   /**Power of intakeMotor is set to intake */
-  /* 
+  
   public Command C_intake(){
     return new InstantCommand(() -> intake());
   }
-  */
+  
   /**Power of intakeMotor is set to outake */
-  /* 
+  
   public Command C_outtake(){
     return new InstantCommand(() -> outtake());
   }
   /**Stops intakeMotor */
-  /* 
+  
   public Command C_stopIntake(){
     return new InstantCommand(() -> stopIntake());
   }
   /**Delay with seconds */
-  /* 
+  
   public Command C_waitCommand(double seconds){
     return new WaitCommand(seconds);
   }
 
 
   /** Returns current State as a String */
-  /* 
+   
   public String getState() {
     return current.toString();
   }
    
-  */
+  
 }
