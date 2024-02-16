@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.driveTrain;
 
 public class Autos {
@@ -76,14 +77,18 @@ public class Autos {
           //shoot.C_ShooterOut(),
           //intake.C_outtake(),
           //intake.C_extendnintake(),
-          drive.C_driveinInches(-36),
+          ///drive.C_driveinInches(-57),
+          drive.C_myCommand(-57),
           //intake.C_setPos("Shooter"),
           //intake.C_stopIntake(),
-          drive.C_driveinInches(36),
+          new WaitCommand(.3),
+          ///drive.C_driveinInches(57)
+          drive.C_myCommand(57)
           //intake.C_outtake(),
           //shoot.C_ShooterStop(),
           //intake.C_stopIntake(),
-          drive.C_driveinInches(-36)
+          //drive.C_driveinInches(-57)
+
         );
     
       }

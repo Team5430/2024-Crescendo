@@ -61,6 +61,8 @@ public class RobotContainer {
     Trigger R_joyButton = R_Joy.button(3);
     R_joyButton.onTrue(new InstantCommand(m_driveTrain::VariableSpeedIncrease, m_driveTrain));
     R_joyButton.onFalse(new InstantCommand(m_driveTrain::VariableSpeedDecrease, m_driveTrain));
+
+   
         
   }
 
