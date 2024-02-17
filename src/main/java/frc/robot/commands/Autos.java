@@ -74,6 +74,7 @@ public class Autos {
   public static Command autoCenter(driveTrain drive) {
     //commented actions are temporary for testing
         return Commands.sequence(
+          /* 
           //shoot.C_ShooterOut(),
           //intake.C_outtake(),
           //intake.C_extendnintake(),
@@ -88,7 +89,10 @@ public class Autos {
           //shoot.C_ShooterStop(),
           //intake.C_stopIntake(),
           //drive.C_driveinInches(-57)
-
+          */
+          drive.C_driveinInches(-35),
+          drive.C_driveinInches(35)
+         
         );
     
       }

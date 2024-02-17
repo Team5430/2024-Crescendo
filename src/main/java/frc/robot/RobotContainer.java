@@ -15,12 +15,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Autos;
 import frc.robot.subsystems.driveTrain;
 import frc.robot.subsystems.hangSub;
+import frc.robot.subsystems.intakeSub;
 
 public class RobotContainer {
 
   // subsystems
   private driveTrain m_driveTrain = new driveTrain();
   private hangSub m_HangSub = new hangSub();
+  private intakeSub m_IntakeSub = new intakeSub();
   
 
   public CommandJoystick L_Joy = new CommandJoystick(Constants.OperatorC.L_Joy);
@@ -45,7 +47,8 @@ public class RobotContainer {
     //drive active input during match
     m_driveTrain.setDefaultCommand(
      new RunCommand( () -> m_driveTrain.drive(L_Joy.getY(), R_Joy.getY()), m_driveTrain));
-    
+    m_IntakeSub.setDefaultCommand(
+     new RunCommand( () -> m_IntakeSub.IntakeControl(CO_Con.getRawAxis(5)), m_IntakeSub)); // makes intake pivot motor controllable by right joystick of controller
   
     // shuffleboard options
   
@@ -64,8 +67,16 @@ public class RobotContainer {
     Trigger R_joyButton = R_Joy.button(3);
     Trigger A_Button = CO_Con.button(1);
     Trigger B_Button = CO_Con.button(2);
+    Trigger UP_DPad = CO_Con.povUp();
+    Trigger DOWN_DPad = CO_Con.povDown();
+    Trigger RIGHT_DPad = CO_Con.povRight();
     R_joyButton.onTrue(new InstantCommand(m_driveTrain::VariableSpeedIncrease, m_driveTrain));
     R_joyButton.onFalse(new InstantCommand(m_driveTrain::VariableSpeedDecrease, m_driveTrain));
+    UP_DPad.onTrue(m_IntakeSub.C_setPos("Shooter"));
+    DOWN_DPad.onTrue(m_IntakeSub.C_setPos("Floor"));
+    RIGHT_DPad.onTrue(m_IntakeSub.C_setPos("Amp"));
+    A_Button.onTrue(new InstantCommand(m_HangSub::extendclimbertimer, m_HangSub));
+
 
    
         

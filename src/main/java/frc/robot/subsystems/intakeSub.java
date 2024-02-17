@@ -116,9 +116,24 @@ public class intakeSub extends SubsystemBase {
           break;
 
     }
-
   }
+public void setPosPowerVersion(String Position){
 
+    switch(Position) {
+
+      case "Shooter":
+          pivotMotor.set(0.5);
+          break;
+      case "Amp":
+         pivotMotor.set(0.3);
+          break;
+      case "Floor":
+         pivotMotor.set(0.2);
+          break;
+
+    }
+  }
+  
   public void extendnIntake() {
     current = state.PIVOTING;
     //5 volts
@@ -146,7 +161,6 @@ public class intakeSub extends SubsystemBase {
     current = state.INTAKING;
 
     intake();
-    
   }
 
   public static void pos(double degrees){
@@ -169,8 +183,10 @@ public class intakeSub extends SubsystemBase {
   pivotMotor.stopMotor();
 
   }
-  
-  //commands
+  public void IntakeControl(double power){
+     pivotMotor.set(power);
+  }
+    //commands
 
   /** @param Position of pivot motor (Three states) 
    * "Shooter", "Amp", "Floor" */

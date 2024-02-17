@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 
 public class hangSub extends SubsystemBase{
@@ -26,15 +27,25 @@ public class hangSub extends SubsystemBase{
         RESTING,
         EXTENDED,
     }
-
+public void motorConfig(){
+    hangmotor.setNeutralMode(NeutralMode.Brake);
+}
 public void extendclimbertimer(){
+    System.out.println("A button pressed");
+
     timer.restart();
+    System.out.println("A button pressed");
+    motorConfig();
     System.out.println("A button pressed");
     if(current == state.RESTING){
         while(timer.get() <= 5){
             hangmotor.set(ControlMode.PercentOutput, .5);
+            current = state.EXTENDED; //updated by Ethan at 1:49 PM 
         }
-        current = state.EXTENDED;
+        //My attempt at making the motor stop -Raul
+        if(current == state.EXTENDED){
+            hangmotor.set(ControlMode.PercentOutput, 0);
+        }
         
     }
     else{

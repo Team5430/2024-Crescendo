@@ -12,14 +12,14 @@ public class Constants {
 
   public static class CANid {
     public static final int hangmotor = 0;
-    public static final int shooterMotor = 15;
+    //public static final int shooterMotor = 15;
     // Talons CANid
     public static int backLeftMotor = 2;
     public static int frontLeftMotor = 4;
     public static int backRightMotor = 3;
     public static int frontRightMotor = 5;
     public static int shooterMotor = 7;
-    public static int pivotMotor = 9;
+    public static int pivotMotor = 15;
     public static int intakeMotor = 10;
   }
 
