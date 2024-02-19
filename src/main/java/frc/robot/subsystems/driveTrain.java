@@ -1,9 +1,12 @@
 package frc.robot.subsystems;
 
+import java.sql.Time;
+//import java.util.Timer;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.kauailabs.navx.frc.AHRS;
-
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,6 +23,8 @@ public class driveTrain extends SubsystemBase {
   }
 
   // sets current state as RESTING when robot starts up
+
+  private Timer timer = new Timer();
   static state current = state.RESTING;
 
   static final TalonFX backLeftMotor = new TalonFX(Constants.CANid.backLeftMotor);
@@ -81,6 +86,20 @@ System.out.println("Stopping Motors. (feet)");
     StopMotors();
   }
 
+    public Command C_driveinFeet(double feet) {
+    return new InstantCommand(() -> driveInDistance(feet));
+  }
+
+
+  //* IGNORE THIS, I AM TESTING THIS FOR PID. THIS SHOULD NOT BE RUN AND WILL NOT BE RAN AT ALL!!! - Anthony S. */
+  public static void PID(){
+  final double kP = 0; 
+  double setpoint = 0; 
+
+  double error = setpoint - kP;
+
+  
+  }
   public static void driveInInches(double inches){
 
     double output = .5;
@@ -135,6 +154,11 @@ if(Math.abs(inches) == inches){
     RunMotors(0);
     
   }
+   
+    public Command C_driveinInches(double inches) {
+    return new InstantCommand(() -> driveInInches(inches));
+  }
+
   
 
   public void drive(double left, double right) {
@@ -151,7 +175,7 @@ if(Math.abs(inches) == inches){
     return new InstantCommand(() -> drive(left, right));
   }
 
-
+ /** will stop all the motors */
   public static void StopMotors(){
     backLeftMotor.stopMotor();
     backRightMotor.stopMotor();
@@ -159,6 +183,7 @@ if(Math.abs(inches) == inches){
     frontRightMotor.stopMotor();
   }
 
+  /** continously running the motor  */
   public static void RunMotors(double speed){
     backLeftMotor.set(speed);
     backRightMotor.set(speed);
@@ -175,13 +200,42 @@ if(Math.abs(inches) == inches){
     frontRightMotor.set(speed);
   }
 
-  public Command C_driveinFeet(double feet) {
-    return new InstantCommand(() -> driveInDistance(feet));
-  }
 
-  public Command C_driveinInches(double inches) {
-    return new InstantCommand(() -> driveInInches(inches));
+
+
+
+
+/** one side turning front must be greater than the other side turning back. 
+ * EXAMPLE:
+ * TURNING LEFT: CurveTurn(left: 0.8, right: 0.4, time: 5.0)
+ * TURNING RIGHT: CurveTurn(left: 0.4, right: 0.8, time: 5.0)
+ */
+  public void CurveTurn(double left, double right, double time){
+  {
+  timer.restart(); 
+   while(timer.get() <= time){
+  backLeftMotor.set(left);
+    backRightMotor.set(right);
+    frontLeftMotor.set(left);
+    frontRightMotor.set(right);
+   }
+   backLeftMotor.set(0);
+    backRightMotor.set(0);
+    frontLeftMotor.set(0);
+    frontRightMotor.set(0);
+   }
   }
+  public Command C_CurveTurn(double left, double right, double time){
+    return new InstantCommand(() -> CurveTurn(left, right, time));
+   }
+  
+
+
+
+
+
+
+
 
 /** Turn to a desired angle, Negative going counter clockwise, and Positive clockwise */
   public static void turntoAngle(double angle){
@@ -206,11 +260,20 @@ if(Math.abs(inches) == inches){
    StopMotors();
    }
 }
-
-/**Negative turns CounterClockwise, while positive, Clockwise COMMAND VERSION */
+  /**Negative turns CounterClockwise, while positive, Clockwise COMMAND VERSION */
 public Command C_turntoAngle(double angle){
   return new InstantCommand(() -> turntoAngle(angle));
 }
+
+
+
+
+
+
+
+
+
+
 
 public Command C_myCommand(double inch){
   return new InstantCommand(() -> myNewcommand(inch));

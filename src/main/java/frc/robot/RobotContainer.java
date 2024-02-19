@@ -49,7 +49,7 @@ public class RobotContainer {
      new RunCommand( () -> m_driveTrain.drive(L_Joy.getY(), R_Joy.getY()), m_driveTrain));
     m_IntakeSub.setDefaultCommand(
      new RunCommand( () -> m_IntakeSub.IntakeControl(CO_Con.getRawAxis(5)), m_IntakeSub)); // makes intake pivot motor controllable by right joystick of controller
-  
+     
     // shuffleboard options
   
     m_chooser.addOption("Right", Autos.autoRight(m_driveTrain));
@@ -70,13 +70,18 @@ public class RobotContainer {
     Trigger UP_DPad = CO_Con.povUp();
     Trigger DOWN_DPad = CO_Con.povDown();
     Trigger RIGHT_DPad = CO_Con.povRight();
+  
     R_joyButton.onTrue(new InstantCommand(m_driveTrain::VariableSpeedIncrease, m_driveTrain));
     R_joyButton.onFalse(new InstantCommand(m_driveTrain::VariableSpeedDecrease, m_driveTrain));
+     
     UP_DPad.onTrue(m_IntakeSub.C_setPos("Shooter"));
     DOWN_DPad.onTrue(m_IntakeSub.C_setPos("Floor"));
     RIGHT_DPad.onTrue(m_IntakeSub.C_setPos("Amp"));
-    A_Button.onTrue(new InstantCommand(m_HangSub::extendclimbertimer, m_HangSub));
+     
+  
 
+    A_Button.onTrue(new InstantCommand(m_HangSub::extendclimbertimer, m_HangSub));
+   
 
    
         

@@ -104,8 +104,7 @@ public class intakeSub extends SubsystemBase {
   public void setPos(String Position){
 
     switch(Position) {
-
-      case "Shooter":
+       case "Shooter":
         pos(0);
           break;
       case "Amp":
@@ -117,22 +116,29 @@ public class intakeSub extends SubsystemBase {
 
     }
   }
+
+  
+  /* 
 public void setPosPowerVersion(String Position){
-
-    switch(Position) {
-
+    switch(Position) { 
       case "Shooter":
-          pivotMotor.set(0.5);
+          //pivotMotor.set(0.5);
+          //C_resetPos();
+          pos(12);
           break;
       case "Amp":
-         pivotMotor.set(0.3);
+         //pivotMotor.set(0.3);
+         //C_resetPos();
+         pos(2);
           break;
       case "Floor":
-         pivotMotor.set(0.2);
+         pos(2);
+         //pivotMotor.set(0.2);
           break;
 
     }
   }
+  */
   
   public void extendnIntake() {
     current = state.PIVOTING;
