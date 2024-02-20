@@ -4,9 +4,10 @@
 
 package frc.robot;
 
+import javax.management.InstanceNotFoundException;
+
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -16,6 +17,7 @@ import frc.robot.commands.Autos;
 import frc.robot.subsystems.driveTrain;
 import frc.robot.subsystems.hangSub;
 import frc.robot.subsystems.intakeSub;
+import frc.robot.subsystems.shooterSub;
 
 public class RobotContainer {
 
@@ -54,7 +56,7 @@ public class RobotContainer {
   
     m_chooser.addOption("Right", Autos.autoRight(m_driveTrain));
     m_chooser.setDefaultOption("Left", Autos.autoLeft(m_driveTrain));
-    m_chooser.addOption("Center", Autos.autoCenter(m_driveTrain));
+    m_chooser.addOption("Center", Autos.autoCenter(m_driveTrain, m_IntakeSub));
 
     Shuffleboard.getTab("Auton")
      .add("AutonChoice", m_chooser);
@@ -62,6 +64,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+
 
     // trigger first, then the use of it
     Trigger R_joyButton = R_Joy.button(3);
@@ -75,15 +78,17 @@ public class RobotContainer {
     UP_DPad.onTrue(m_IntakeSub.C_setPos("Shooter"));
     DOWN_DPad.onTrue(m_IntakeSub.C_setPos("Floor"));
     RIGHT_DPad.onTrue(m_IntakeSub.C_setPos("Amp"));
-    A_Button.onTrue(new InstantCommand(m_HangSub::extendclimbertimer, m_HangSub));
+    //A_Button.onTrue(new InstantCommand(m_HangSub::extendclimbertimer, m_HangSub));
 
+   // B_Button.onTrue(new InstantCommand(m_IntakeSub::outtake, m_IntakeSub));
+   // B_Button.onFalse(new InstantCommand(m_IntakeSub::stopIntake, m_IntakeSub));
 
+    A_Button.onTrue(m_HangSub.C_pullinTime(1, 0.39));
    
         
    //A_Button.toggleOnTrue(new InstantCommand(m_HangSub::C_Doe, m_HangSub));
-   A_Button.onTrue(m_HangSub.C_Doe());
+
    // B_Button.onTrue(new InstantCommand(m_HangSub:: C_ExtendClimberTimer));
-   B_Button.onTrue(m_HangSub.C_ExtendClimberTimer());
   }
 
   public Command getAutonomousCommand() {

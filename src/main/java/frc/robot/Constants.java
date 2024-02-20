@@ -8,10 +8,11 @@ public class Constants {
   public static double encoderTicks = 2048;
   public static double circumferenceInInches = 6 * Math.PI;
   public static double inches = 12;
-  public static double Iratio = 7/3; 
+  public static double Iratio = 4/1; 
 
   public static class CANid {
-    public static final int hangmotor = 0;
+    public static  int L_hangmotor = 0;
+    public static int R_hangmotor = 1;
     //public static final int shooterMotor = 15;
     // Talons CANid
     public static int backLeftMotor = 2;
@@ -19,8 +20,8 @@ public class Constants {
     public static int backRightMotor = 3;
     public static int frontRightMotor = 5;
     public static int shooterMotor = 7;
-    public static int pivotMotor = 15;
-    public static int intakeMotor = 10;
+    public static int pivotMotor = 12;
+    public static int intakeMotor = 9;
   }
 
   public static class OperatorC {

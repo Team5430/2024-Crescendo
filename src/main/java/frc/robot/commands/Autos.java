@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.driveTrain;
+import frc.robot.subsystems.intakeSub;
+import frc.robot.subsystems.shooterSub;
 
 public class Autos {
     
@@ -71,28 +73,26 @@ public class Autos {
       //intake.C_resetPos()//moves the intake into the shooter position
     );
   }
-  public static Command autoCenter(driveTrain drive) {
+  public static Command autoCenter(driveTrain drive, intakeSub intake) {
     //commented actions are temporary for testing
         return Commands.sequence(
-          /* 
-          //shoot.C_ShooterOut(),
-          //intake.C_outtake(),
-          //intake.C_extendnintake(),
-          ///drive.C_driveinInches(-57),
-          drive.C_myCommand(-57),
-          //intake.C_setPos("Shooter"),
-          //intake.C_stopIntake(),
-          new WaitCommand(.3),
-          ///drive.C_driveinInches(57)
-          drive.C_myCommand(57)
-          //intake.C_outtake(),
-          //shoot.C_ShooterStop(),
-          //intake.C_stopIntake(),
-          //drive.C_driveinInches(-57)
-          */
-          drive.C_driveinInches(-35),
-          drive.C_driveinInches(35)
-         
+           
+         // shoot.C_ShooterOut(),  //shootes out the note
+         new WaitCommand(1),
+          intake.C_outtake(),    //outtakes the intake
+          //intake.C_extendnintake(),extends the intake
+         new WaitCommand(1),
+         intake.C_stopIntake(),
+         // shoot.C_ShooterOut(),  //shootes out the note
+          drive.C_myCommand(-36),
+          //intake.C_setPos("Shooter"), Set the intake to a shooter position
+          //intake.C_stopIntake(),  Stop the intake 
+          new WaitCommand(5),
+          drive.C_myCommand(36)
+          //intake.C_outtake(),    outtakes the intake 
+          //shoot.C_ShooterOut(),  Shootes out the note
+          //shoot.C_ShooterStop(), Stops the shooter from shooting
+          //intake.C_stopIntake(), Stops the intake from shooting
         );
     
       }

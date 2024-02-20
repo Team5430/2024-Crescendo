@@ -1,67 +1,60 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 
 
 public class hangSub extends SubsystemBase{
 
-    static TalonSRX hangmotor = new TalonSRX(Constants.CANid.hangmotor);
-   // static TalonSRX hangmotor = new TalonSRX(15);
+    static TalonSRX L_hangmotor = new TalonSRX(Constants.CANid.L_hangmotor);
+    static TalonSRX R_hangmotor = new TalonSRX(Constants.CANid.R_hangmotor);
+
     public state current = state.RESTING;
     private Timer timer = new Timer();
 
+    private int counter = 0; 
+
         private enum state{
         RESTING,
-        EXTENDED,
+        PULLING,
+        MOUNTED
     }
-public void motorConfig(){
-    hangmotor.setNeutralMode(NeutralMode.Brake);
+public void StopHang(){
+     L_hangmotor.set(ControlMode.PercentOutput, 0);
+     R_hangmotor.set(ControlMode.PercentOutput, 0);  
 }
-public void extendclimbertimer(){
-    System.out.println("A button pressed");
-
-    timer.restart();
-    System.out.println("A button pressed");
-    motorConfig();
-    System.out.println("A button pressed");
-    if(current == state.RESTING){
-        while(timer.get() <= 5){
-            hangmotor.set(ControlMode.PercentOutput, .5);
-            current = state.EXTENDED; //updated by Ethan at 1:49 PM 
+//dont fix it if it ain't broke 
+    public void pullinTime(double time, double power){
+        if(counter == 0){
+        timer.restart();
+    while(timer.get() <= Math.abs(time)){
+            L_hangmotor.set(ControlMode.PercentOutput, power);
+            R_hangmotor.set(ControlMode.PercentOutput, -power);
+           }
+            L_hangmotor.set(ControlMode.PercentOutput, 0);
+            R_hangmotor.set(ControlMode.PercentOutput, 0);
+         timer.stop();
+           counter++;
+        } else {
+            StopHang();
         }
-        //My attempt at making the motor stop -Raul
-        if(current == state.EXTENDED){
-            hangmotor.set(ControlMode.PercentOutput, 0);
-        }
-        
-    }
-    else{
-        while(timer.get() <= 5){
-                    hangmotor.set(ControlMode.PercentOutput, -.5);
-                    
-                }
-            current = state.RESTING;
-    }
-    System.out.println(timer.get());
+        //hang only has 1 chance mechanically
     }
 
-    public Command C_ExtendClimberTimer(){
-      return new InstantCommand(() -> extendclimbertimer());
+/**Positive lets go, negative pulls down. */
+    public Command C_pullinTime(double time, double power){
+      return new InstantCommand(() -> pullinTime(time, power));
         }
-
+   public Command C_StopHang(){
+      return new InstantCommand(() -> StopHang());
+        }
     public Command C_Doe(){
       return new InstantCommand(() -> System.out.println("AHOY AHOY COMMANDS AIN'T WORKING"));
         }

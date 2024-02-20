@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
@@ -9,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 
 public class driveTrain extends SubsystemBase {
@@ -47,7 +47,7 @@ public class driveTrain extends SubsystemBase {
 //drive in feet
   public static void driveInDistance(double feet){
 
-    double output = .5;
+    double output = .8;
 
     double totalInches = feet * Constants.inches;
 
@@ -124,25 +124,31 @@ if(Math.abs(inches) == inches){
 
     if(inches > 0){
       while(backLeftMotor.getRotorPosition().getValueAsDouble() - initial < rotationsNeeded){
-        RunMotors(0.5);
+        RunMotors(0.8);
       }
-    }
-    else{
+    }else{
       while(backLeftMotor.getRotorPosition().getValueAsDouble() - initial > rotationsNeeded){
-        RunMotors(-0.5);
+        RunMotors(-0.8);
       }
     }
+    System.out.println("Stopping Motors");
     RunMotors(0);
     
   }
   
 
   public void drive(double left, double right) {
-
+  //deadzone adding .2
+   if(left > .2 || left < -.2 || right > .2 || right < -.2){
     backLeftMotor.set((left / 2 * Constants.multiplier));
     frontLeftMotor.set((left / 2 * Constants.multiplier));
     backRightMotor.set((right / 2 * Constants.multiplier));
     frontRightMotor.set((right / 2 * Constants.multiplier));
+    }else{
+      StopMotors();
+    }
+    
+    
     
   }
 
@@ -226,8 +232,15 @@ public Command C_myCommand(double inch){
     Constants.gyroPos = g_ahrs.getAngle();
   }  
 
-  public static void UpdateVals(){
+  @Override
+  public void periodic(){
+    var r = backRightMotor.getRotorPosition();
+    var l = backLeftMotor.getRotorPosition();
 
+    SmartDashboard.putNumber("L", r.getValueAsDouble());
+    SmartDashboard.putNumber("R", l.getValueAsDouble());
+
+    new WaitCommand(.02);
   }
   
 }
