@@ -8,7 +8,9 @@ import frc.robot.subsystems.intakeSub;
 import frc.robot.subsystems.shooterSub;
 
 public class Autos {
+
     
+
     public static Command autoRight(driveTrain drive) {
 //commented actions are temporary for testing
     return Commands.sequence(
@@ -36,15 +38,19 @@ public class Autos {
       //intake.C_stopIntake(),//turns off intake motor
       drive.C_driveinInches(-11.046),//moves backwards 11.046 inches
       drive.C_turntoAngle(-60.02),//turns left 60.02 degrees
-      drive.C_driveinInches(-55.5)//moves backwards 55.5 inches
+      drive.C_driveinInches(-55.5),//moves backwards 55.5 inches
       //intake.C_resetPos()//resets the intake pivot position
-    );
+      drive.C_driveinInches(-18.95),
+      drive.C_turntoAngle(73.78)
+          );
  
   }
 
   public static Command autoLeft(driveTrain drive) {
     //commented actions are temporary for testing
      return Commands.sequence(
+
+     
       //shoot.C_ShooterOut(),//turns on the shooter motor
       //intake.C_intake(),//makes sure the note is properly secure
       //intake.C_waitCommand(1),//lets the shooter warm up to be at speed
@@ -71,6 +77,10 @@ public class Autos {
       drive.C_turntoAngle(60.02),//turns the robot 60.02 degrees right
       drive.C_driveinInches(-55.5)//moves backwards 55.5 inches
       //intake.C_resetPos()//moves the intake into the shooter position
+      //shooterSub.C_
+    
+
+
     );
   }
   public static Command autoCenter(driveTrain drive, intakeSub intake) {
@@ -96,6 +106,7 @@ public class Autos {
         );
     
       }
+      
     }
 
 

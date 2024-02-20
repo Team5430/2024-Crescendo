@@ -122,25 +122,8 @@ public class intakeSub extends SubsystemBase {
     public Command C_setPos(String Position){
     return new InstantCommand(() -> setPos(Position));
   }
-  /*
-public void setPosPowerVersion(String Position){
 
-    switch(Position) {
-
-      case "Shooter":
-          pivotMotor.set(0.5);
-          break;
-      case "Amp":
-         pivotMotor.set(0.3);
-          break;
-      case "Floor":
-         pivotMotor.set(0.2);
-          break;
-
-    }
-    
-  }
-  */
+  
   public void extendnIntake() {
     current = state.PIVOTING;
 
