@@ -48,7 +48,7 @@ public class intakeSub extends SubsystemBase {
 
   final PositionDutyCycle m_inital = new PositionDutyCycle(initial);
 
-  // 1/8 as to get 45 degrees in rotational units, multiplied by gear ratio to accoutn for it
+  // 1/8 as to get 45 degrees in rotational units, multiplied by gear ratio to account for it
     final PositionDutyCycle m_45degrees = new PositionDutyCycle(initial + (.145 * Constants.Iratio));
 
   // degrees
