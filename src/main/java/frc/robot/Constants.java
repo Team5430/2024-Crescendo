@@ -11,14 +11,14 @@ public class Constants {
   public static double Iratio = 4/1; 
 
   public static class CANid {
-    public static  int L_hangmotor = 7;
-    public static int R_hangmotor = 8;
+    public static  int L_hangmotor = 2;
+    public static int R_hangmotor = 1;
     //public static final int shooterMotor = 15;
     // Talons CANid
-    public static int backLeftMotor = 2;
-    public static int frontLeftMotor = 3;
-    public static int backRightMotor = 1;
-    public static int frontRightMotor = 4;
+    public static int backLeftMotor = 3;
+    public static int frontLeftMotor = 4;
+    public static int backRightMotor = 5;
+    public static int frontRightMotor = 6;
     public static int shooterMotor = 15;
     public static int pivotMotor = 6;
     public static int intakeMotor = 5;

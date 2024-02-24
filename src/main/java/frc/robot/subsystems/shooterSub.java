@@ -7,10 +7,10 @@ import frc.robot.Constants;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.hardware.TalonFX;
-
+import edu.wpi.first.wpilibj.Timer;
 
 public class shooterSub extends SubsystemBase{
-  
+   private Timer timer = new Timer();
   
     
    // static TalonSRX shooterMotor = new TalonSRX(Constants.CANid.shooterMotor);
@@ -21,14 +21,24 @@ public class shooterSub extends SubsystemBase{
        //  shooterMotor.configVoltageCompSaturation(.5);
     }
 
-    public void ShooterOut(){
+    public void ShooterOutTime(double power, double time){
        // shooterMotor.set(ControlMode.PercentOutput, .5);
-       shooterMotor.set(ControlMode.PercentOutput, 1);
+       timer.restart();
+       while(timer.get() <= Math.abs(time)){
+       shooterMotor.set(ControlMode.PercentOutput, power);
+       timer.stop();
+       }
+    }
+    public void ShooterOut(){
+      shooterMotor.set(ControlMode.PercentOutput, 1);
     }
 
-    public void ShooterIn(){
+    public void ShooterInTime(double power, double time){
         //shooterMotor.set(ControlMode.PercentOutput, -.5);
-        shooterMotor.set(ControlMode.PercentOutput, -1);
+        shooterMotor.set(ControlMode.PercentOutput, -power);
+    }
+    public void ShooterIn(){
+      shooterMotor.set(ControlMode.PercentOutput, -1);
     }
     
     public void ShooterStop(){
@@ -39,10 +49,16 @@ public class shooterSub extends SubsystemBase{
     public Command C_ShooterOut(){
         return new InstantCommand(() -> ShooterOut());
     }
+    public Command C_ShooterOutTime(double power, double time){
+    return new InstantCommand(() -> ShooterOutTime(power, time));
+    }
     
     /**Sets motor to intake gamepiece*/
     public Command C_ShooterIn(){
         return new InstantCommand(() -> ShooterIn());
+    }
+      public Command C_ShooterInTime(double power, double time){
+    return new InstantCommand(() -> ShooterInTime(power, time));
     }
 
     /**Stops motor*/

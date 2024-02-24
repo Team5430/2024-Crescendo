@@ -15,7 +15,7 @@ public class hangSub extends SubsystemBase{
 
     static TalonSRX L_hangmotor = new TalonSRX(Constants.CANid.L_hangmotor);
     static TalonSRX R_hangmotor = new TalonSRX(Constants.CANid.R_hangmotor);
-
+    state current = state.REST;
     private Timer timer = new Timer();
 
     private int counter = 0; 
@@ -24,6 +24,36 @@ public void StopHang(){
      L_hangmotor.set(ControlMode.PercentOutput, 0);
      R_hangmotor.set(ControlMode.PercentOutput, 0);  
 }
+private enum state {
+    DEPLOYED,
+    DEPLOYING,
+    REST
+  }
+
+  /* 
+  private void HangOneButton(double time, double power){
+  current = state.REST;
+        if(counter == 0){
+            if (current = "REST"){
+        
+        timer.restart();
+    while(timer.get() <= Math.abs(time)){
+            L_hangmotor.set(ControlMode.PercentOutput, -power);
+            R_hangmotor.set(ControlMode.PercentOutput, power);
+           }
+            L_hangmotor.set(ControlMode.PercentOutput, 0);
+            R_hangmotor.set(ControlMode.PercentOutput, 0);
+         timer.stop();
+           counter++;
+        }
+        if (Curr)
+        } else {
+            StopHang();
+        }
+  }
+  */
+
+  
 public void moveHang(double speed){
     L_hangmotor.set(ControlMode.PercentOutput, speed);
     R_hangmotor.set(ControlMode.PercentOutput, -speed);
@@ -74,4 +104,3 @@ public void moveHang(double speed){
       return new InstantCommand(() -> StopHang());
         }
     }   
-
