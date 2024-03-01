@@ -3,12 +3,13 @@ package frc.robot;
 public class Constants {
 //multiplier must not be 0
   public static double multiplier = .5;
+  
   public static double gyroPos = 0;
   public static double ratio = 10.71;
   public static double encoderTicks = 2048;
   public static double circumferenceInInches = 6 * Math.PI;
   public static double inches = 12;
-  public static double Iratio = 4/1; 
+  public static double Iratio = 5/1; 
 
   public static class CANid {
     public static  int L_hangmotor = 0;

@@ -58,21 +58,21 @@ public class intakeSub extends SubsystemBase {
   public intakeSub() {}
 
   public void motorConfig(){
-    
+    // makes a new config
     var slot0configs = new Slot0Configs();
-
+    // The new config = .15
     slot0configs.kP = .15;
-
+    // mfeed = new feedbackconfig
     var mfeed = new FeedbackConfigs();
-
+    // makes a new configutation setting
     mfeed.SensorToMechanismRatio = Constants.Iratio;
-
+    // 5 rotations = 1 big rotation 
     pivotMotor.getConfigurator().apply(slot0configs);
-
+    //Applies configuration
     pivotMotor.getConfigurator().apply(mfeed);
-
+    //pivotMotor from getconfigurator from apply mfeed
     pivotMotor.setPosition(0);
-
+    //PivorMotor sets position to 
   }
 
   // spins outwards wheels into the robot

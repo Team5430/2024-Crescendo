@@ -1,8 +1,5 @@
 package frc.robot.subsystems;
 
-import java.sql.Time;
-//import java.util.Timer;
-
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.Timer;
@@ -78,10 +75,7 @@ public class driveTrain extends SubsystemBase {
     frontRightMotor.set((right / 2 * Constants.multiplier));
     }else{
       StopMotors();
-    }
-    
-    
-    
+    } 
   }
 
   // Commands are started with "C_" as to identify them as commands rather than methods
