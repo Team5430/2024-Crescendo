@@ -49,94 +49,8 @@ public class driveTrain extends SubsystemBase {
   public void VariableSpeedDecrease() {
     Constants.multiplier = .5;
   }
-//drive in feet
-  public static void driveInDistance(double feet){
 
-    double output = .8;
-
-    double totalInches = feet * Constants.inches;
-
-    double motorRotations = (totalInches / Constants.circumferenceInInches) * Constants.ratio * Constants.encoderTicks;
-
-    var initial = backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks;
-
-    backLeftMotor.setPosition(0);
-    backRightMotor.setPosition(0);
-    frontLeftMotor.setPosition(0);
-    frontRightMotor.setPosition(0);
-
-//both < and > implemeneted to account for negative and positive value
-if(Math.abs(feet) == feet){
-      while ((motorRotations + initial) >= backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks) {
-    RunMotors(output);
-    System.out.println("Current position: " + backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks);
-    System.out.println(backLeftMotor.getRotorPosition());
-    System.out.println("Will be less than: " + motorRotations + initial);
-    } 
-}else{
-  while ((motorRotations + initial) <= backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks) {
-    RunMotors(-output);
-    System.out.println("Current position: " + backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks);
-    System.out.println("Will be greater than: " + motorRotations + initial);
-  }
-}
-
-//stopmotors
-System.out.println("Stopping Motors. (feet)");
-    StopMotors();
-  }
-
-    public Command C_driveinFeet(double feet) {
-    return new InstantCommand(() -> driveInDistance(feet));
-  }
-
-
-  //* IGNORE THIS, I AM TESTING THIS FOR PID. THIS SHOULD NOT BE RUN AND WILL NOT BE RAN AT ALL!!! - Anthony S. */
-  public static void PID(){
-  final double kP = 0; 
-  double setpoint = 0; 
-
-  double error = setpoint - kP;
-
-  
-  }
-  public static void driveInInches(double inches){
-
-    double output = .5;
-
-    //Sets a total amount of inches needed to tracvel
-    double totalInches = inches;
-
-    //The amount of 
-    double motorRotations = (totalInches / Constants.circumferenceInInches) * Constants.ratio * Constants.encoderTicks;
-
-    backLeftMotor.setPosition(0);
-    backRightMotor.setPosition(0);
-    frontLeftMotor.setPosition(0);
-    frontRightMotor.setPosition(0);
-
-    var initial = backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks;
-
-if(Math.abs(inches) == inches){
-    while ((motorRotations + initial) >=  backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks) {
-      RunMotors(output);
-    }
-}else{
-     while ((motorRotations + initial) <=  backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks) {
-      RunMotors(-output);
-      System.out.println("Current position: " + backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks);
-      System.out.println(backLeftMotor.getRotorPosition());
-      System.out.println("Will be greater than: " + motorRotations + initial);
-      SmartDashboard.putNumber("Current Position: ", backLeftMotor.getRotorPosition().getValueAsDouble() * Constants.encoderTicks);
-      SmartDashboard.putNumber("Will be greater than", motorRotations);
-    }
-}
-//stopmotors
-    System.out.println("Stopping Motors. (inches)");
-  StopMotors();
-  }
-
-  public static void myNewcommand(double inches){
+  public static void driveinInches(double inches){
 
     double rotationsNeeded = (Constants.ratio * inches) / Constants.circumferenceInInches;
     double initial = (backLeftMotor.getRotorPosition().getValueAsDouble());
@@ -155,12 +69,6 @@ if(Math.abs(inches) == inches){
     
   }
    
-    public Command C_driveinInches(double inches) {
-    return new InstantCommand(() -> driveInInches(inches));
-  }
-
-  
-
   public void drive(double left, double right) {
   //deadzone adding .2
    if(left > .2 || left < -.2 || right > .2 || right < -.2){
@@ -281,8 +189,8 @@ public Command C_turntoAngle(double angle){
 
 
 
-public Command C_myCommand(double inch){
-  return new InstantCommand(() -> myNewcommand(inch));
+public Command C_driveinInches(double inches){
+  return new InstantCommand(() -> driveinInches(inches));
 }
 
   /** Returns current State as a String */

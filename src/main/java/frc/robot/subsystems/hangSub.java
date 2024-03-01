@@ -30,28 +30,6 @@ private enum state {
     REST
   }
 
-  /* 
-  private void HangOneButton(double time, double power){
-  current = state.REST;
-        if(counter == 0){
-            if (current = "REST"){
-        
-        timer.restart();
-    while(timer.get() <= Math.abs(time)){
-            L_hangmotor.set(ControlMode.PercentOutput, -power);
-            R_hangmotor.set(ControlMode.PercentOutput, power);
-           }
-            L_hangmotor.set(ControlMode.PercentOutput, 0);
-            R_hangmotor.set(ControlMode.PercentOutput, 0);
-         timer.stop();
-           counter++;
-        }
-        if (Curr)
-        } else {
-            StopHang();
-        }
-  }
-  */
 
   
 public void moveHang(double speed){
@@ -64,7 +42,7 @@ public void moveHang(double speed){
         timer.restart();
     while(timer.get() <= Math.abs(time)){
             L_hangmotor.set(ControlMode.PercentOutput, power);
-            R_hangmotor.set(ControlMode.PercentOutput, -power);
+            R_hangmotor.set(ControlMode.PercentOutput, power);
            }
             L_hangmotor.set(ControlMode.PercentOutput, 0);
             R_hangmotor.set(ControlMode.PercentOutput, 0);
@@ -75,31 +53,12 @@ public void moveHang(double speed){
         }
 
         }
-
-     public void releaseinTime(double time, double power){
-        if(counter == 0){
-        timer.restart();
-    while(timer.get() <= Math.abs(time)){
-            L_hangmotor.set(ControlMode.PercentOutput, power);
-            R_hangmotor.set(ControlMode.PercentOutput,  power);
-           }
-            L_hangmotor.set(ControlMode.PercentOutput, 0);
-            R_hangmotor.set(ControlMode.PercentOutput, 0);
-         timer.stop();
-           counter++;
-        } else {
-            StopHang();
-        }       
-        //hang only has 1 chance mechanically
-    }
 
 /**Positive lets go, negative pulls down. */
     public Command C_pullinTime(double time, double power){
       return new InstantCommand(() -> pullinTime(time, power));
         }
-    public Command C_releaseInTime(double time, double power){
-        return new InstantCommand(() -> releaseinTime(time, power));
-    }
+
    public Command C_StopHang(){
       return new InstantCommand(() -> StopHang());
         }

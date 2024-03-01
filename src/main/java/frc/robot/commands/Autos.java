@@ -94,11 +94,11 @@ public class Autos {
          new WaitCommand(1),
          intake.C_stopIntake(),
          // shoot.C_ShooterOut(),  //shootes out the note
-          drive.C_myCommand(-36),
+          drive.C_driveinInches(-36),
           //intake.C_setPos("Shooter"), Set the intake to a shooter position
           //intake.C_stopIntake(),  Stop the intake 
           new WaitCommand(5),
-          drive.C_myCommand(36)
+          drive.C_driveinInches(36)
           //intake.C_outtake(),    outtakes the intake 
           //shoot.C_ShooterOut(),  Shootes out the note
           //shoot.C_ShooterStop(), Stops the shooter from shooting

@@ -9,12 +9,13 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.Timer;
 
+
 public class shooterSub extends SubsystemBase{
    private Timer timer = new Timer();
   
     
    // static TalonSRX shooterMotor = new TalonSRX(Constants.CANid.shooterMotor);
-    static TalonSRX shooterMotor = new TalonSRX(12);
+    static TalonSRX shooterMotor = new TalonSRX(Constants.CANid.shooterMotor);
     public shooterSub(){}
 
     public void motorConfig(){
