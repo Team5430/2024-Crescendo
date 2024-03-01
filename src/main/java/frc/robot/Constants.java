@@ -12,17 +12,17 @@ public class Constants {
   public static double Iratio = 5/1; 
 
   public static class CANid {
-    public static  int L_hangmotor = 0;
+    public static  int L_hangmotor = 2;
     public static int R_hangmotor = 1;
     //public static final int shooterMotor = 15;
     // Talons CANid
-    public static int backLeftMotor = 2;
+    public static int backLeftMotor = 5;
     public static int frontLeftMotor = 4;
     public static int backRightMotor = 3;
-    public static int frontRightMotor = 5;
-    public static int shooterMotor = 7;
-    public static int pivotMotor = 12;
-    public static int intakeMotor = 9;
+    public static int frontRightMotor = 6;
+    public static int shooterMotor = 15;
+    public static int pivotMotor = 7;
+    public static int intakeMotor = 8;
   }
 
   public static class OperatorC {

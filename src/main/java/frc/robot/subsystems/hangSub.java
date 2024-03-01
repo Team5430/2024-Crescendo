@@ -15,20 +15,26 @@ public class hangSub extends SubsystemBase{
 
     static TalonSRX L_hangmotor = new TalonSRX(Constants.CANid.L_hangmotor);
     static TalonSRX R_hangmotor = new TalonSRX(Constants.CANid.R_hangmotor);
-
-    public state current = state.RESTING;
+    state current = state.REST;
     private Timer timer = new Timer();
 
     private int counter = 0; 
 
-        private enum state{
-        RESTING,
-        PULLING,
-        MOUNTED
-    }
 public void StopHang(){
      L_hangmotor.set(ControlMode.PercentOutput, 0);
      R_hangmotor.set(ControlMode.PercentOutput, 0);  
+}
+private enum state {
+    DEPLOYED,
+    DEPLOYING,
+    REST
+  }
+
+
+  
+public void moveHang(double speed){
+    L_hangmotor.set(ControlMode.PercentOutput, speed);
+    R_hangmotor.set(ControlMode.PercentOutput, -speed);
 }
 //dont fix it if it ain't broke 
     public void pullinTime(double time, double power){
@@ -45,16 +51,15 @@ public void StopHang(){
         } else {
             StopHang();
         }
-        //hang only has 1 chance mechanically
-    }
+
+        }
 
 /**Positive lets go, negative pulls down. */
     public Command C_pullinTime(double time, double power){
       return new InstantCommand(() -> pullinTime(time, power));
         }
+
    public Command C_StopHang(){
       return new InstantCommand(() -> StopHang());
         }
-        
     }   
-
