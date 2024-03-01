@@ -80,7 +80,7 @@ public void moveHang(double speed){
         if(counter == 0){
         timer.restart();
     while(timer.get() <= Math.abs(time)){
-            L_hangmotor.set(ControlMode.PercentOutput, -power);
+            L_hangmotor.set(ControlMode.PercentOutput, power);
             R_hangmotor.set(ControlMode.PercentOutput,  power);
            }
             L_hangmotor.set(ControlMode.PercentOutput, 0);

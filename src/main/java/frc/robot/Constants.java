@@ -15,13 +15,13 @@ public class Constants {
     public static int R_hangmotor = 1;
     //public static final int shooterMotor = 15;
     // Talons CANid
-    public static int backLeftMotor = 3;
+    public static int backLeftMotor = 5;
     public static int frontLeftMotor = 4;
-    public static int backRightMotor = 5;
+    public static int backRightMotor = 3;
     public static int frontRightMotor = 6;
     public static int shooterMotor = 15;
-    public static int pivotMotor = 6;
-    public static int intakeMotor = 5;
+    public static int pivotMotor = 7;
+    public static int intakeMotor = 8;
   }
 
   public static class OperatorC {
