@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
@@ -48,11 +49,11 @@ public class intakeSub extends SubsystemBase {
 
   final PositionDutyCycle m_inital = new PositionDutyCycle(initial);
 
-  // 1/8 as to get 45 degrees in rotational units, multiplied by gear ratio to account for it
-    final PositionDutyCycle m_45degrees = new PositionDutyCycle(initial + (.145 * Constants.Iratio));
+  // 1/8 as to get 45 degrees in rotational units
+    final PositionDutyCycle m_45degrees = new PositionDutyCycle(initial + .145);
 
   // degrees
-  final PositionDutyCycle m_floor = new PositionDutyCycle(initial + (.375 * Constants.Iratio));
+  final PositionDutyCycle m_floor = new PositionDutyCycle(initial + .375);
 
   public intakeSub() {}
 
@@ -62,7 +63,13 @@ public class intakeSub extends SubsystemBase {
 
     slot0configs.kP = .15;
 
+    var mfeed = new FeedbackConfigs();
+
+    mfeed.SensorToMechanismRatio = Constants.Iratio;
+
     pivotMotor.getConfigurator().apply(slot0configs);
+
+    pivotMotor.getConfigurator().apply(mfeed);
 
     pivotMotor.setPosition(0);
 
@@ -91,7 +98,7 @@ public class intakeSub extends SubsystemBase {
 
     stopIntake();
 
-    pivotMotor.setControl(m_inital);
+    setPos("Shooter");
 
     current = state.RESTING;
   }
@@ -101,7 +108,6 @@ public class intakeSub extends SubsystemBase {
    * @param Position options are "Shooter", "Amp", "Floor"
    * 
    */
-
   public void setPos(String Position){
 
     switch(Position) {
@@ -119,6 +125,7 @@ public class intakeSub extends SubsystemBase {
     }
     
   }
+
     public Command C_setPos(String Position){
     return new InstantCommand(() -> setPos(Position));
   }

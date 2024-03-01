@@ -36,7 +36,7 @@ public void StopHang(){
         timer.restart();
     while(timer.get() <= Math.abs(time)){
             L_hangmotor.set(ControlMode.PercentOutput, power);
-            R_hangmotor.set(ControlMode.PercentOutput, -power);
+            R_hangmotor.set(ControlMode.PercentOutput, power);
            }
             L_hangmotor.set(ControlMode.PercentOutput, 0);
             R_hangmotor.set(ControlMode.PercentOutput, 0);
@@ -54,9 +54,6 @@ public void StopHang(){
         }
    public Command C_StopHang(){
       return new InstantCommand(() -> StopHang());
-        }
-    public Command C_Doe(){
-      return new InstantCommand(() -> System.out.println("AHOY AHOY COMMANDS AIN'T WORKING"));
         }
         
     }   
