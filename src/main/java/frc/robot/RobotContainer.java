@@ -78,9 +78,11 @@ public class RobotContainer {
     //R_joyButton.onTrue(new InstantCommand(m_driveTrain::VariableSpeedIncrease, m_driveTrain));
     //R_joyButton.onFalse(new InstantCommand(m_driveTrain::VariableSpeedDecrease, m_driveTrain));
      
-     
+    // Goes to shooter point after pressing up
     UP_DPad.onTrue(m_IntakeSub.C_setPos("Shooter"));
+    // 
     DOWN_DPad.onTrue(m_IntakeSub.C_setPos("Floor"));
+    //
     RIGHT_DPad.onTrue(m_IntakeSub.C_setPos("Amp"));
       
    
