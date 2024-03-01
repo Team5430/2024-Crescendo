@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix6.hardware.TalonFX;
 
 
 public class shooterSub extends SubsystemBase{
@@ -14,7 +13,7 @@ public class shooterSub extends SubsystemBase{
   
     
    // static TalonSRX shooterMotor = new TalonSRX(Constants.CANid.shooterMotor);
-    static TalonSRX shooterMotor = new TalonSRX(12);
+    static TalonSRX shooterMotor = new TalonSRX(Constants.CANid.shooterMotor);
     public shooterSub(){}
 
     public void motorConfig(){
