@@ -37,6 +37,8 @@ public class intakeSub extends SubsystemBase {
 
   static TalonSRX intakeMotor = new TalonSRX(Constants.CANid.intakeMotor);
 
+  static TalonSRX transversalMotor = new TalonSRX(Constants.CANid.transversalMotor);
+
   static double initial = pivotMotor.getRotorPosition().getValueAsDouble();
 
   state current = state.RESTING;
@@ -76,15 +78,31 @@ public class intakeSub extends SubsystemBase {
     
   }
 
-  // spins outwards wheels into the robot
+  // spins intake wheels into the robot
   public void intake() {
     current = state.INTAKING;
     intakeMotor.set(ControlMode.PercentOutput, -.7);
   }
 
+//spins intake wheels away from robot
   public void outtake(){
     current = state.OUTAKING;
     intakeMotor.set(ControlMode.PercentOutput, .7);
+  }
+
+//transversal goes towards the intake
+  public void transversalIN(){
+    transversalMotor.set(ControlMode.PercentOutput, .5);
+  }
+
+//transversal goes outwards towards the shooter's spout
+  public void transversalOUT(){
+  transversalMotor.set(ControlMode.PercentOutput, -.5);
+  }
+
+//stop the transversal motor from running
+  public void transversalSTOP(){
+    transversalMotor.set(ControlMode.PercentOutput, 0);
   }
 
   public void stopIntake() {
@@ -93,6 +111,7 @@ public class intakeSub extends SubsystemBase {
     current = state.RESTING;
   }
 
+//stops motor and sets pivot to shooter
   public void resetPos() {
 
     current = state.PIVOTING;
@@ -109,17 +128,17 @@ public class intakeSub extends SubsystemBase {
    * @param Position options are "Shooter", "Amp", "Floor"
    * 
    */
-  public void setPos(String Position){
+  public void setPos(String Position){//A switch case method used to change the pivot position of the motor
 
     switch(Position) {
 
-      case "Shooter":
+      case "Shooter"://moves to Shooter position
         pivotMotor.setControl(m_inital);
           break;
-      case "Amp":
+      case "Amp"://moves to Amp position
         pivotMotor.setControl(m_45degrees);
           break;
-      case "Floor":
+      case "Floor"://moves to Floor position
         pivotMotor.setControl(m_floor);
           break;
 
@@ -127,26 +146,29 @@ public class intakeSub extends SubsystemBase {
     
   }
 
-    public Command C_setPos(String Position){
+    public Command C_setPos(String Position){//Command calls a method
     return new InstantCommand(() -> setPos(Position));
   }
 
   
-  public void extendnIntake() {
-    current = state.PIVOTING;
+  public void extendnIntake() {//this method sets the intake to the floor, and then activates the intake motor
+    current = state.PIVOTING;//turning the status of the pivot motor to Pivoting
 
-    pivotMotor.setControl(m_floor);
+    pivotMotor.setControl(m_floor);//sets the pivot motor to the floor
 
-    pivotMotor.stopMotor();
+    pivotMotor.stopMotor();//turns off the motor
 
-    current = state.INTAKING;
+    current = state.INTAKING;//changes the state of the robot to intaking
 
-    intake();
+    intake();//turns on the intake motor
   }
   
   public void IntakeControl(double power){
      pivotMotor.set(power);
   }
+
+  
+
     //commands
 
   /** @param Position of pivot motor (Three states) 
@@ -181,12 +203,14 @@ public class intakeSub extends SubsystemBase {
   public Command C_stopIntake(){
     return new InstantCommand(() -> stopIntake());
   }
-  /**Delay with seconds */
   
-  public Command C_waitCommand(double seconds){
-    return new WaitCommand(seconds);
+  public Command C_transerversalSTOP(){
+    return new InstantCommand(() -> transversalSTOP());
   }
 
+  public Command C_transerversalOUT(){
+    return new InstantCommand(() -> transversalOUT());
+  }
 
   /** Returns current State as a String */
    

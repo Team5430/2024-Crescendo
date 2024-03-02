@@ -7,7 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -54,9 +53,9 @@ public class RobotContainer {
     
     // shuffleboard options
   
-    m_chooser.addOption("Right", Autos.autoRight(m_driveTrain));
-    m_chooser.setDefaultOption("Left", Autos.autoLeft(m_driveTrain));
-    m_chooser.addOption("Center", Autos.autoCenter(m_driveTrain, m_IntakeSub));
+    m_chooser.addOption("Right", Autos.autoRight(m_driveTrain, m_shooterSub, m_IntakeSub));
+    m_chooser.setDefaultOption("Left", Autos.autoLeft(m_driveTrain, m_shooterSub, m_IntakeSub));
+    m_chooser.addOption("Center", Autos.autoCenter(m_driveTrain, m_shooterSub, m_IntakeSub));
 
     Shuffleboard.getTab("Auton")
      .add("AutonChoice", m_chooser);
@@ -94,8 +93,6 @@ public class RobotContainer {
 
     A_Button.onTrue(m_HangSub.C_pullinTime(1.8, -0.6)); 
     //B_Button.onTrue(m_HangSub.C_releaseInTime(3, 0.4)); 
-    UP_DPad.onTrue(m_shooterSub.C_ShooterIn());
-    DOWN_DPad.onTrue(m_shooterSub.C_ShooterOut());
    //A_Button.toggleOnTrue(new InstantCommand(m_HangSub::C_Doe, m_HangSub));
 
    // B_Button.onTrue(new InstantCommand(m_HangSub:: C_ExtendClimberTimer));

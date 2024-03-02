@@ -15,38 +15,35 @@ public class hangSub extends SubsystemBase{
 
     static TalonSRX L_hangmotor = new TalonSRX(Constants.CANid.L_hangmotor);
     static TalonSRX R_hangmotor = new TalonSRX(Constants.CANid.R_hangmotor);
-    state current = state.REST;
+    state current = state.RESTING;
     private Timer timer = new Timer();
 
     private int counter = 0; 
+
+private enum state {
+    DEPLOYED,
+    DEPLOYING,
+    RESTING
+  }
+
 
 public void StopHang(){
      L_hangmotor.set(ControlMode.PercentOutput, 0);
      R_hangmotor.set(ControlMode.PercentOutput, 0);  
 }
-private enum state {
-    DEPLOYED,
-    DEPLOYING,
-    REST
-  }
 
-
-  
-public void moveHang(double speed){
-    L_hangmotor.set(ControlMode.PercentOutput, speed);
-    R_hangmotor.set(ControlMode.PercentOutput, -speed);
-}
 //dont fix it if it ain't broke 
     public void pullinTime(double time, double power){
         if(counter == 0){
         timer.restart();
+//abs value as time cannot go negative
     while(timer.get() <= Math.abs(time)){
             L_hangmotor.set(ControlMode.PercentOutput, power);
             R_hangmotor.set(ControlMode.PercentOutput, power);
            }
-            L_hangmotor.set(ControlMode.PercentOutput, 0);
-            R_hangmotor.set(ControlMode.PercentOutput, 0);
+            StopHang();
          timer.stop();
+        //counter added as to prevent any other running as physically limited
            counter++;
         } else {
             StopHang();
@@ -54,7 +51,7 @@ public void moveHang(double speed){
 
         }
 
-/**Positive lets go, negative pulls down. */
+/**negative pulls down. */
     public Command C_pullinTime(double time, double power){
       return new InstantCommand(() -> pullinTime(time, power));
         }

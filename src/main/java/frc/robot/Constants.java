@@ -23,6 +23,7 @@ public class Constants {
     public static int shooterMotor = 15;
     public static int pivotMotor = 7;
     public static int intakeMotor = 8;
+    public static int transversalMotor = 9;
   }
 
   public static class OperatorC {
