@@ -105,7 +105,15 @@ public class Autos {
         );
     
       }
+       public static Command autoTest(driveTrain drive, intakeSub intake) {
+        return Commands.sequence( 
+          drive.C_driveinInches(2),
+          drive.C_turntoAngle(180),
+         drive.C_driveinInches(-2),
+         drive.C_turntoAngle(-180)
+        );
       
     }
+  }
 
 

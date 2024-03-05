@@ -4,12 +4,19 @@ public class Constants {
 //multiplier must not be 0
   public static double multiplier = .5;
   
+  //
   public static double gyroPos = 0;
+  //represents the amount of rotations the motor needs in order to make one full gear rotation
   public static double ratio = 10.71;
+  //represents an increase or decrease in the number that the related software gives.
   public static double encoderTicks = 2048;
+  //represents the total length of the wheel
   public static double circumferenceInInches = 6 * Math.PI;
+  //represents number of inches in a foot
   public static double inches = 12;
+  // ratio of the intake
   public static double Iratio = 12/56; 
+  // represents the amount of gear ratio * rotations needed for 1 degree of pivot rotation
   public static double degree = 1.0891/90;
 
   public static class CANid {

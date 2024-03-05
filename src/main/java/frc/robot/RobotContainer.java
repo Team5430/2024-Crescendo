@@ -66,7 +66,17 @@ public class RobotContainer {
 
 //Code down here are buttons from joysticks/gamepad intialized and used for subsystems
   //word before Trigger is button, word before = is functions act the buttons
+  //X = 3 Y = 4 L1 = 5 R1 = 6 Back arrow = 7 Forward arrow = 8 Left joystick = 9 Right joystick = 10
     Trigger A_Button = CO_Con.button(1); 
+    Trigger B_Button = CO_Con.button(2);
+    Trigger X_Button = CO_Con.button(3);
+    Trigger Y_Button = CO_Con.button(4);
+    Trigger L1_Button = CO_Con.button(5);
+    Trigger R2_Button = CO_Con.button(6);
+    Trigger Back_Arrow = CO_Con.button(7);
+    Trigger Forward_Arrow = CO_Con.button(8);
+    Trigger LeftJoystick_Button = CO_Con.button(9);
+    Trigger RightJoystick_Button = CO_Con.button(10);  
     Trigger UP_DPad = CO_Con.povUp();
     Trigger DOWN_DPad = CO_Con.povDown();
     Trigger RIGHT_DPad = CO_Con.povRight();
@@ -78,7 +88,9 @@ public class RobotContainer {
   DOWN_DPad.onTrue(new InstantCommand(intakeSub::setFloor)); //Dpad down for intake to move in floor position to intake note
   RIGHT_DPad.onTrue(new InstantCommand(intakeSub::setFloor)); //Dpad right for intake to move into Amp Position
       
-
+  A_Button.and(B_Button).whileFalse(new InstantCommand(intakeSub::C_stopIntake));
+  A_Button.onTrue(new InstantCommand(intakeSub:: C_outtake));
+  B_Button.onTrue(new InstantCommand(intakeSub:: C_intake));
       //Junkyards below, but these won't be deleted because we might need them
 
     // trigger first, then the use of it

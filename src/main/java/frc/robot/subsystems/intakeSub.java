@@ -48,7 +48,7 @@ public class intakeSub extends SubsystemBase {
 
   static TalonSRX transversalMotor = new TalonSRX(Constants.CANid.transversalMotor);
 
-  state current = state.RESTING;
+  static state current = state.RESTING;
 
     //convert encoder ticks to degrees  
 
@@ -113,13 +113,13 @@ public void moveToEncoder(){
   pivotMotor.setControl(m_stop);
 } */
   // spins intake wheels into the robot
-  public void intake() {
+  public static void intake() {
     current = state.INTAKING;
     intakeMotor.set(ControlMode.PercentOutput, -.7);
   }
 
 //spins intake wheels away from robot
-  public void outtake(){
+  public static void outtake(){
     current = state.OUTAKING;
     intakeMotor.set(ControlMode.PercentOutput, .7);
   }
@@ -139,7 +139,7 @@ public void moveToEncoder(){
     transversalMotor.set(ControlMode.PercentOutput, 0);
   }
 
-  public void stopIntake() {
+  public static void stopIntake() {
     // stop motors on outer intake
     intakeMotor.set(ControlMode.PercentOutput, 0);
     current = state.RESTING;
@@ -224,18 +224,18 @@ public void moveToEncoder(){
   }
   /**Power of intakeMotor is set to intake */
   
-  public Command C_intake(){
+  public static Command C_intake(){
     return new InstantCommand(() -> intake());
   }
   
   /**Power of intakeMotor is set to outake */
   
-  public Command C_outtake(){
+  public  static Command C_outtake(){
     return new InstantCommand(() -> outtake());
   }
   /**Stops intakeMotor */
   
-  public Command C_stopIntake(){
+  public static Command C_stopIntake(){
     return new InstantCommand(() -> stopIntake());
   }
   
