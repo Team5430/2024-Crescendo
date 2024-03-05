@@ -9,13 +9,15 @@ public class Constants {
   public static double encoderTicks = 2048;
   public static double circumferenceInInches = 6 * Math.PI;
   public static double inches = 12;
-  public static double Iratio = 5/1; 
+  public static double Iratio = 12/56; 
+  public static double degree = 1.0891/90;
 
   public static class CANid {
     public static  int L_hangmotor = 2;
     public static int R_hangmotor = 1;
     //public static final int shooterMotor = 15;
-    // Talons CANid
+
+    // Talon CANid's
     public static int backLeftMotor = 5;
     public static int frontLeftMotor = 4;
     public static int backRightMotor = 3;
@@ -27,8 +29,11 @@ public class Constants {
   }
 
   public static class OperatorC {
+    //Sets the controller in USB order from driver station
     public static int CO_Con = 0;
+    //sets the left stick in USB order from driver station
     public static int L_Joy = 1;
+    //sets the right stick in USB order from driver station
     public static int R_Joy = 2;
   }
 }

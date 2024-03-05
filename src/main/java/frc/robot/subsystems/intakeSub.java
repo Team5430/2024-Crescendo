@@ -1,3 +1,4 @@
+//These are the imports
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -7,15 +8,23 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
-
+//Class made to manage intake
 public class intakeSub extends SubsystemBase {
-
+//Status of the intake motor
+//"RESTING" means the intake is not moving
+//"PIVOTING" means the intake is currently changing position
+//"INTAKING" means the intake can take notes from the floor
+//"OUTAKING" means the intake is moving the note outwards
+//"SHOOTER" means the intake motor is in the shooter pivot position
+//"FLOOR" means the intake motor is in the floor pivot position
+//"AMP" means the intake motor is in the amp pivot position
   private enum state {
     RESTING,
     PIVOTING,
@@ -39,45 +48,70 @@ public class intakeSub extends SubsystemBase {
 
   static TalonSRX transversalMotor = new TalonSRX(Constants.CANid.transversalMotor);
 
-  static double initial = pivotMotor.getRotorPosition().getValueAsDouble();
-
   state current = state.RESTING;
 
     //convert encoder ticks to degrees  
 
   final DutyCycleOut m_stop = new DutyCycleOut(0);
 
-  final DutyCycleOut m_intake = new DutyCycleOut(.8);
+  final DutyCycleOut m_intake = new DutyCycleOut(.7);
 
-  final PositionDutyCycle m_inital = new PositionDutyCycle(initial);
+  final static PositionDutyCycle m_floor = new PositionDutyCycle(0);
 
-  // 1/8 as to get 45 degrees in rotational units
-    final PositionDutyCycle m_45degrees = new PositionDutyCycle(initial + .145);
+  //75 degrees
+  final static PositionDutyCycle m_amp = new PositionDutyCycle(Constants.degree * 75);
 
-  // degrees
-  final PositionDutyCycle m_floor = new PositionDutyCycle(initial + .375);
+  // 160 degrees
+  final static PositionDutyCycle m_shoot = new PositionDutyCycle(Constants.degree * 160 );
 
   public intakeSub() {}
 
   public void motorConfig(){
     // makes a new config
     var slot0configs = new Slot0Configs();
-    // The new config = .15 which = 1 circle
-    slot0configs.kP = .15;
-    // mfeed = new feedbackconfig
+    // The new config = .15 
+    slot0configs.kP = .5;
+
+    slot0configs.kI = .2;
+
+    slot0configs.kD = .01;
+
+
+    //slot0configs.kG = 0.01;
+    //adjust for any gravitational pull
+    //slot0configs.GravityType = GravityTypeValue.Arm_Cosine;
+
     var mfeed = new FeedbackConfigs();
     // makes a new configutation setting 
     mfeed.SensorToMechanismRatio = Constants.Iratio;
     // 5 rotations = 1 big rotation 
+    mfeed.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+
     pivotMotor.getConfigurator().apply(slot0configs);
     //Applies configuration
     pivotMotor.getConfigurator().apply(mfeed);
     //Applies configuration 
     //Sets position to 0
     pivotMotor.setPosition(0);
-    
-  }
 
+        
+  }
+/* 
+public void moveToEncoder(){
+
+  double e;
+  if(){
+  while(){
+    pivotMotor.set(0.7);
+  }
+}else{
+  while(){
+    pivotMotor.set(-.7);
+  }
+}
+
+  pivotMotor.setControl(m_stop);
+} */
   // spins intake wheels into the robot
   public void intake() {
     current = state.INTAKING;
@@ -118,38 +152,39 @@ public class intakeSub extends SubsystemBase {
 
     stopIntake();
 
-    setPos("Shooter");
+    setShoot();
 
     current = state.RESTING;
   }
-
+//Below initializes both methods and commands of "setShoot", "setFloor", and "setAmp"
   /**
    * 
    * @param Position options are "Shooter", "Amp", "Floor"
    * 
    */
-  public void setPos(String Position){//A switch case method used to change the pivot position of the motor
-
-    switch(Position) {
-
-      case "Shooter"://moves to Shooter position
-        pivotMotor.setControl(m_inital);
-          break;
-      case "Amp"://moves to Amp position
-        pivotMotor.setControl(m_45degrees);
-          break;
-      case "Floor"://moves to Floor position
-        pivotMotor.setControl(m_floor);
-          break;
-
-    }
-    
+  public static void setShoot(){
+            pivotMotor.setControl(m_shoot);
   }
 
-    public Command C_setPos(String Position){//Command calls a method
-    return new InstantCommand(() -> setPos(Position));
+  public static void setAmp(){
+            pivotMotor.setControl(m_amp);
   }
 
+  public static void setFloor(){
+             pivotMotor.setControl(m_floor);
+  }
+
+  public static Command C_setShoot(){
+    return new InstantCommand(() -> setShoot());
+  }
+
+  public static Command C_setAmp(){
+    return new InstantCommand(() -> setAmp());
+  }
+
+  public static Command C_setFloor(){
+    return new InstantCommand(() -> setFloor());
+  }
   
   public void extendnIntake() {//this method sets the intake to the floor, and then activates the intake motor
     current = state.PIVOTING;//turning the status of the pivot motor to Pivoting
@@ -204,9 +239,13 @@ public class intakeSub extends SubsystemBase {
     return new InstantCommand(() -> stopIntake());
   }
   
+  /**Stops (unused) transversal motor */
+  
   public Command C_transerversalSTOP(){
     return new InstantCommand(() -> transversalSTOP());
   }
+
+  /**Shoots (unused) transversal motor*/
 
   public Command C_transerversalOUT(){
     return new InstantCommand(() -> transversalOUT());
@@ -217,6 +256,15 @@ public class intakeSub extends SubsystemBase {
   public String getState() {
     return current.toString();
   }
-   
+   //This loops indefinitely just gets the pivot position
+  @Override
+  public void periodic(){
+
+    var pivot = pivotMotor.getRotorPosition();
+
+    double encoder = pivot.getValueAsDouble();
+
+    SmartDashboard.putNumber("Encoder", encoder);
+  }
   
 }
