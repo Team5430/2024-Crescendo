@@ -1,4 +1,6 @@
-package frc.robot.subsystems;
+ /* NOTE:Commented out because this has no use (For now)
+
+ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -6,10 +8,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.Timer;
 
 
+
+//TEMPORARILY UNAVAILABLE TO USE UNTIL SHOOTER IS INSTALLED
+
+ 
 public class shooterSub extends SubsystemBase{
    private Timer timer = new Timer();
   
@@ -46,7 +51,7 @@ public class shooterSub extends SubsystemBase{
        // shooterMotor.set(ControlMode.PercentOutput, 0);
        shooterMotor.set(ControlMode.PercentOutput, 0);
     }
-    /** Sets motor to shoot out gamepiece*/
+    /** Sets motor to shoot out gamepiece
     public Command C_ShooterOut(){
         return new InstantCommand(() -> ShooterOut());
     }
@@ -54,7 +59,7 @@ public class shooterSub extends SubsystemBase{
     return new InstantCommand(() -> ShooterOutTime(power, time));
     }
     
-    /**Sets motor to intake gamepiece*/
+    /**Sets motor to intake gamepiece
     public Command C_ShooterIn(){
         return new InstantCommand(() -> ShooterIn());
     }
@@ -62,9 +67,10 @@ public class shooterSub extends SubsystemBase{
     return new InstantCommand(() -> ShooterInTime(power, time));
     }
 
-    /**Stops motor*/
+    /**Stops motor
     public Command C_ShooterStop(){
         return new InstantCommand(() -> ShooterStop());
    }
  
 }
+*/
