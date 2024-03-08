@@ -1,9 +1,16 @@
+
 //These are just imports
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+
+package frc.robot.subsystems;
+
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -68,3 +75,4 @@ public void StopHang(){
       return new InstantCommand(() -> StopHang());
         }
     }   
+
