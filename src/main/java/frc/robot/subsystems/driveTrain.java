@@ -59,13 +59,13 @@ public class driveTrain extends SubsystemBase {
       // As long as the distance travelled is less than the rotations needeed
       while(backLeftMotor.getRotorPosition().getValueAsDouble() - initial < rotationsNeeded){
         // Set speed of motors to 80% speed
-        RunMotors(0.8);
+        RunMotors(Constants.driveinInchespower);
       }
     }else{ // If the distance is a negative number (less than 0)
       // As long as the distance travelled is greater than the rotations needed
       while(backLeftMotor.getRotorPosition().getValueAsDouble() - initial > rotationsNeeded){
         // Set speed of motors to 80% speed backwds
-        RunMotors(-0.8);
+        RunMotors(-Constants.driveinInchespower);
       }
     }
     // Stop motors after all is said and done

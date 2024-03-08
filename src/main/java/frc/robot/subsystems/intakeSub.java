@@ -30,7 +30,6 @@ public class intakeSub extends SubsystemBase {
     PIVOTING,
     INTAKING,
     OUTAKING,
-    //positions
     SHOOTER,
     FLOOR,
     AMP
@@ -77,10 +76,6 @@ public class intakeSub extends SubsystemBase {
     slot0configs.kD = .01;
 
 
-    //slot0configs.kG = 0.01;
-    //adjust for any gravitational pull
-    //slot0configs.GravityType = GravityTypeValue.Arm_Cosine;
-
     var mfeed = new FeedbackConfigs();
     // makes a new configutation setting 
     mfeed.SensorToMechanismRatio = Constants.Iratio;
@@ -96,22 +91,6 @@ public class intakeSub extends SubsystemBase {
 
         
   }
-/* 
-public void moveToEncoder(){
-
-  double e;
-  if(){
-  while(){
-    pivotMotor.set(0.7);
-  }
-}else{
-  while(){
-    pivotMotor.set(-.7);
-  }
-}
-
-  pivotMotor.setControl(m_stop);
-} */
   // spins intake wheels into the robot
   public static void intake() {
     current = state.INTAKING;
@@ -158,9 +137,7 @@ public void moveToEncoder(){
   }
 //Below initializes both methods and commands of "setShoot", "setFloor", and "setAmp"
   /**
-   * 
    * @param Position options are "Shooter", "Amp", "Floor"
-   * 
    */
   public static void setShoot(){
             pivotMotor.setControl(m_shoot);
@@ -203,22 +180,16 @@ public void moveToEncoder(){
   }
 
   
-
     //commands
-
   /** @param Position of pivot motor (Three states) 
    * "Shooter", "Amp", "Floor" */
   
-
-  
   /**Resets position of pivotMotor to starting position (Shooter position) */
-   
   public Command C_resetPos(){
     return new InstantCommand(() -> resetPos());
   }
   
   /**Extends to floor and intakes*/
-  
   public Command C_extendnintake(){
     return new InstantCommand(() -> extendnIntake());
   }
@@ -229,34 +200,31 @@ public void moveToEncoder(){
   }
   
   /**Power of intakeMotor is set to outake */
-  
   public  static Command C_outtake(){
     return new InstantCommand(() -> outtake());
   }
+
   /**Stops intakeMotor */
-  
   public static Command C_stopIntake(){
     return new InstantCommand(() -> stopIntake());
   }
   
   /**Stops (unused) transversal motor */
-  
   public Command C_transerversalSTOP(){
     return new InstantCommand(() -> transversalSTOP());
   }
 
   /**Shoots (unused) transversal motor*/
-
   public Command C_transerversalOUT(){
     return new InstantCommand(() -> transversalOUT());
   }
 
   /** Returns current State as a String */
-   
   public String getState() {
     return current.toString();
   }
-   //This loops indefinitely just gets the pivot position
+
+  //This loops indefinitely just gets the pivot position
   @Override
   public void periodic(){
 
