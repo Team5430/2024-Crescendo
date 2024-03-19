@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants;
 import frc.robot.subsystems.driveTrain;
 import frc.robot.subsystems.intakeSub;
 
@@ -12,6 +13,8 @@ public class Autos {
     /*By March 3, 2024, all shooters command lines are commented due to absence of shooter, 
     we will not use the shooter by the time of arizona trip
     */
+
+    /* 
 
     public static Command autoRight(driveTrain drive, intakeSub intake) {
     return Commands.sequence(
@@ -98,6 +101,16 @@ public class Autos {
         );
       
     }
+
+    */
+
+      public static Command panicAuto(driveTrain drive) {
+        return Commands.sequence(
+          new WaitCommand(Constants.delay),
+          drive.C_driveinInches(-65)
+        );
+
+      }
   }
 
 

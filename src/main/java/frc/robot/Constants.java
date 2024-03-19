@@ -15,16 +15,17 @@ public class Constants {
   //represents number of inches in a foot
   public static double inches = 12;
   // ratio of the intake
-  public static double Iratio = 12/56; 
+  public static double Iratio = 56/12; 
   // represents the amount of gear ratio * rotations needed for 1 degree of pivot rotation
   public static double degree = 1.0891/90;
   // the time it takes to pull the arms down
-  public static double pulltime = 1.8;
+  public static double pulltime = .9;
   //the power the hang will be at
-  public static double pullpower = -0.6;
+  public static double pullpower = -0.35;
   // the power the driveininches will be at
-  public static double driveinInchespower = 0.8;
+  public static double driveinInchespower = 0.3;
 
+  public static double delay = 1;
   public static class CANid {
     public static  int L_hangmotor = 2;
     public static int R_hangmotor = 1;

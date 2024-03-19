@@ -33,8 +33,8 @@ public class driveTrain extends SubsystemBase {
   private static AHRS g_ahrs = new AHRS(SPI.Port.kMXP);  //initialize g_arhs as AHRS Gyroscope
 
   public void motorConfig() { //Configs all motor inverted (going CCW)
-    backLeftMotor.setInverted(true);
-    frontLeftMotor.setInverted(true);
+    //backLeftMotor.setInverted(true);
+    //frontLeftMotor.setInverted(true);
   }
 
   // Method to increase variable speed of drivetrain
@@ -44,6 +44,10 @@ public class driveTrain extends SubsystemBase {
 //Method to decrease variable speed of drivetrain 
   public void VariableSpeedDecrease() {
     Constants.multiplier = .5;
+  }
+
+  public void VariableSpeedIncreaseNORMAL(){
+    Constants.multiplier = 2;
   }
 
   // Method to drive the drivetrain an x amount of inches forwards relative to current position.
@@ -79,8 +83,8 @@ public class driveTrain extends SubsystemBase {
    if(left > .2 || left < -.2 || right > .2 || right < -.2){
     backLeftMotor.set((left / 2 * Constants.multiplier));
     frontLeftMotor.set((left / 2 * Constants.multiplier));
-    backRightMotor.set((right / 2 * Constants.multiplier));
-    frontRightMotor.set((right / 2 * Constants.multiplier));
+    backRightMotor.set((-right / 2 * Constants.multiplier));
+    frontRightMotor.set((-right / 2 * Constants.multiplier));
     }else{
       // if any of the motors moving less than 20% speed
       StopMotors();
@@ -105,17 +109,17 @@ public class driveTrain extends SubsystemBase {
   /** continously running the motor  */
   public static void RunMotors(double speed){
     backLeftMotor.set(speed);
-    backRightMotor.set(speed);
+    backRightMotor.set(-speed);
     frontLeftMotor.set(speed);
-    frontRightMotor.set(speed);
+    frontRightMotor.set(-speed);
     
   }
 
   /**positive speed value turns RIGHT; neagtive speed value turns LEFT */
   public static void TurnRobot(double speed){
-    backLeftMotor.set(-speed);
+    backLeftMotor.set(speed);
     backRightMotor.set(speed);
-    frontLeftMotor.set(-speed);
+    frontLeftMotor.set(speed);
     frontRightMotor.set(speed);
   }
 
@@ -148,18 +152,18 @@ public class driveTrain extends SubsystemBase {
 
     g_ahrs.reset();
   
-    double initial = g_ahrs.getAngle();
+    double initial = g_ahrs.getRoll();
   
     //if its negative, we want to turn left
     if(angle == -Math.abs(angle)){  //while current angle is less than the current angle + wanted
-      while((initial + angle) <= g_ahrs.getAngle()){
+      while((initial + angle) <= g_ahrs.getRoll()){
         TurnRobot(-.3); //turn robot at -30% (CW)
       UpdateVal(); //gets gyroscope angle value to update
      }
    StopMotors(); //Stops the motors
    // if it's not negative, we're turning right.
    }else{
-      while((initial + angle) >= g_ahrs.getAngle()){
+      while((initial + angle) >= g_ahrs.getRoll()){
         TurnRobot(+.3); //turn robot at 30% (CCW)
       UpdateVal(); //gets gyroscope angle value to update
      }
@@ -184,7 +188,7 @@ public Command C_driveinInches(double inches){
 
   //used a fix for a present delay
   public static void UpdateVal(){  //function to get the gyroscope angle value
-    Constants.gyroPos = g_ahrs.getAngle();
+    Constants.gyroPos = g_ahrs.getRoll();
   }  
   
 }

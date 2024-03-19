@@ -4,6 +4,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
@@ -25,6 +26,7 @@ public class intakeSub extends SubsystemBase {
 //"SHOOTER" means the intake motor is in the shooter pivot position
 //"FLOOR" means the intake motor is in the floor pivot position
 //"AMP" means the intake motor is in the amp pivot position
+
   private enum state {
     RESTING,
     PIVOTING,
@@ -67,13 +69,15 @@ public class intakeSub extends SubsystemBase {
 
   public void motorConfig(){
     // makes a new config
+
     var slot0configs = new Slot0Configs();
     // The new config = .15 
-    slot0configs.kP = .5;
+    slot0configs.kP = .09;
 
     slot0configs.kI = .2;
 
-    slot0configs.kD = .01;
+    slot0configs.kD = 0;
+
 
 
     var mfeed = new FeedbackConfigs();
@@ -89,7 +93,7 @@ public class intakeSub extends SubsystemBase {
     //Sets position to 0
     pivotMotor.setPosition(0);
 
-        
+  
   }
   // spins intake wheels into the robot
   public static void intake() {
@@ -101,21 +105,6 @@ public class intakeSub extends SubsystemBase {
   public static void outtake(){
     current = state.OUTAKING;
     intakeMotor.set(ControlMode.PercentOutput, .7);
-  }
-
-//transversal goes towards the intake
-  public void transversalIN(){
-    transversalMotor.set(ControlMode.PercentOutput, .5);
-  }
-
-//transversal goes outwards towards the shooter's spout
-  public void transversalOUT(){
-  transversalMotor.set(ControlMode.PercentOutput, -.5);
-  }
-
-//stop the transversal motor from running
-  public void transversalSTOP(){
-    transversalMotor.set(ControlMode.PercentOutput, 0);
   }
 
   public static void stopIntake() {
@@ -209,16 +198,6 @@ public class intakeSub extends SubsystemBase {
     return new InstantCommand(() -> stopIntake());
   }
   
-  /**Stops (unused) transversal motor */
-  public Command C_transerversalSTOP(){
-    return new InstantCommand(() -> transversalSTOP());
-  }
-
-  /**Shoots (unused) transversal motor*/
-  public Command C_transerversalOUT(){
-    return new InstantCommand(() -> transversalOUT());
-  }
-
   /** Returns current State as a String */
   public String getState() {
     return current.toString();
@@ -234,5 +213,6 @@ public class intakeSub extends SubsystemBase {
 
     SmartDashboard.putNumber("Encoder", encoder);
   }
+
   
 }

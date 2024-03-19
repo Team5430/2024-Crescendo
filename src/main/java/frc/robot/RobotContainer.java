@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -16,8 +17,10 @@ import frc.robot.subsystems.driveTrain;
 import frc.robot.subsystems.hangSub;
 import frc.robot.subsystems.intakeSub;
 
+
 public class RobotContainer {
 
+  
   // subsystems as variables
   private driveTrain m_driveTrain = new driveTrain();
   private hangSub m_HangSub = new hangSub();
@@ -46,13 +49,15 @@ public class RobotContainer {
 
     // shuffleboard options
   
-  
-    m_chooser.addOption("Right", Autos.autoRight(m_driveTrain, m_IntakeSub));
-    m_chooser.setDefaultOption("Left", Autos.autoLeft(m_driveTrain, m_IntakeSub));
-    m_chooser.addOption("Center", Autos.autoCenter(m_driveTrain, m_IntakeSub));
+    m_chooser.setDefaultOption("Run This One", Autos.panicAuto(m_driveTrain));
+    //m_chooser.addOption("Right", Autos.autoRight(m_driveTrain, m_IntakeSub));
+    //m_chooser.addOption("Center", Autos.autoCenter(m_driveTrain, m_IntakeSub));
+    //m_chooser.addOption("Left", Autos.autoLeft(m_driveTrain, m_IntakeSub));
 
     Shuffleboard.getTab("Auton")
      .add("AutonChoice", m_chooser);
+
+    SmartDashboard.putNumber("Delay", Constants.delay);
     
   }
 
@@ -64,7 +69,11 @@ public class RobotContainer {
     Trigger A_Button = CO_Con.button(1); 
     Trigger B_Button = CO_Con.button(2);
 
+    Trigger L1_Button = CO_Con.button(5);
+    Trigger R1_Button = CO_Con.button(6);
+
     Trigger R_joyButton = R_Joy.button(3);
+    Trigger L_JoyButton = L_Joy.button(3);
 
     Trigger UP_DPad = CO_Con.povUp();
     Trigger DOWN_DPad = CO_Con.povDown();
@@ -76,17 +85,27 @@ public class RobotContainer {
     R_joyButton.onTrue(new InstantCommand(m_driveTrain::VariableSpeedIncrease, m_driveTrain));
     R_joyButton.onFalse(new InstantCommand(m_driveTrain::VariableSpeedDecrease, m_driveTrain)); 
 
+    L_JoyButton.onTrue(new InstantCommand(m_driveTrain::VariableSpeedIncreaseNORMAL, m_driveTrain));
+    L_JoyButton.onFalse(new InstantCommand(m_driveTrain::VariableSpeedDecrease, m_driveTrain));
+
+
   
-    UP_DPad.onTrue(new InstantCommand(intakeSub::setShoot)); // (deprecated) Dpad for intake to move up in shoot position to score speaker
-    DOWN_DPad.onTrue(new InstantCommand(intakeSub::setFloor)); //Dpad down for intake to move in floor position to intake note
-    RIGHT_DPad.onTrue(new InstantCommand(intakeSub::setFloor)); //Dpad right for intake to move into Amp Position
+   // UP_DPad.onTrue(new InstantCommand(intakeSub::setShoot)); // (deprecated) Dpad for intake to move up in shoot position to score speaker
+   // DOWN_DPad.onTrue(new InstantCommand(intakeSub::setFloor)); //Dpad down for intake to move in floor position to intake note
+    //RIGHT_DPad.onTrue(new InstantCommand(intakeSub::setAmp)); //Dpad right for intake to move into Amp Position
       
-    A_Button.and(B_Button).whileFalse(new InstantCommand(intakeSub::C_stopIntake));
-    A_Button.onTrue(new InstantCommand(intakeSub:: C_outtake));
-    B_Button.onTrue(new InstantCommand(intakeSub:: C_intake));
+    //A_Button.onTrue(new InstantCommand(intakeSub:: outtake));
+    //A_Button.onFalse(new InstantCommand(intakeSub:: stopIntake));
+    //B_Button.onTrue(new InstantCommand(intakeSub:: intake));
+    //B_Button.onFalse(new InstantCommand(intakeSub:: stopIntake));
+
    
     // Goes to shooter point after pressing up
-    A_Button.onTrue(m_HangSub.C_pullinTime(Constants.pulltime, Constants.pullpower)); 
+    L1_Button.onTrue(new InstantCommand(m_HangSub:: L_hang)); 
+    L1_Button.onFalse(new InstantCommand(m_HangSub:: stop_Lhang));
+
+    R1_Button.onTrue(new InstantCommand(m_HangSub:: R_hang)); 
+    R1_Button.onFalse(new InstantCommand(m_HangSub:: stop_Rhang));
   }
 
   public Command getAutonomousCommand() {

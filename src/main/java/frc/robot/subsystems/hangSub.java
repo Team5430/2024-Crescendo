@@ -59,6 +59,21 @@ public void StopHang(){
 
         }
 
+    public void R_hang(){
+      R_hangmotor.set(ControlMode.PercentOutput, Constants.pullpower);
+    }
+    public void L_hang(){
+      L_hangmotor.set(ControlMode.PercentOutput, Constants.pullpower);
+    }
+
+       public void stop_Rhang(){
+      R_hangmotor.set(ControlMode.PercentOutput, 0);
+    }
+    public void stop_Lhang(){
+      L_hangmotor.set(ControlMode.PercentOutput, 0);
+
+    }
+
 //command wrappers
 
 /**negative pulls down. */
@@ -69,5 +84,19 @@ public void StopHang(){
    public Command C_StopHang(){
       return new InstantCommand(() -> StopHang());
         }
+  public Command C_Rhang(){
+    return new InstantCommand(() -> R_hang());
+  }
+    public Command C_Lhang(){
+    return new InstantCommand(() -> L_hang());
+  }
+
+      public Command C_StopLhang(){
+    return new InstantCommand(() -> stop_Lhang());
+  }
+
+        public Command C_StopRhang(){
+    return new InstantCommand(() -> stop_Rhang());
+  }
     }   
 
